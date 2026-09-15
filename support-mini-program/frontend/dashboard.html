@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据仪表盘 - 问题工单系统</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>数据仪表盘</h1>
+      <div class="dashboard-controls">
+        <select id="period-select">
+          <option value="week">本周</option>
+          <option value="month" selected>本月</option>
+          <option value="quarter">本季度</option>
+        </select>
+        <button class="btn btn-sm" onclick="window.location.href='/'">返回工单</button>
+      </div>
+    </header>
+
+    <!-- 指标卡片 -->
+    <div class="metrics-grid" id="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon" style="background:rgba(0,212,255,0.15)">📋</div>
+        <div class="metric-value" id="met-new">-</div>
+        <div class="metric-label">新增工单</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:rgba(0,230,118,0.15)">✅</div>
+        <div class="metric-value" id="met-resolved">-</div>
+        <div class="metric-label">已解决</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:rgba(255,171,64,0.15)">⏱</div>
+        <div class="metric-value" id="met-avg-time">- h</div>
+        <div class="metric-label">平均解决时长</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:rgba(68,138,255,0.15)">⭐</div>
+        <div class="metric-value" id="met-avg-rating">-</div>
+        <div class="metric-label">平均满意度</div>
+      </div>
+    </div>
+
+    <!-- 趋势图 -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>工单趋势（近30天）</h3>
+        <canvas id="trend-chart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>分类分布</h3>
+        <canvas id="category-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- 处理员绩效 + SLA -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <h3>处理员绩效</h3>
+        <canvas id="staff-chart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>SLA 达标率</h3>
+        <div class="sla-gauge-container">
+          <div class="sla-gauge" id="sla-gauge-value">-</div>
+          <div class="sla-gauge-label">按时响应率</div>
+        </div>
+        <div class="sla-detail" id="sla-detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

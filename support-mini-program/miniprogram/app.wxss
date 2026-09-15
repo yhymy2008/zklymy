@@ -1,0 +1,229 @@
+/* 全局样式 - 深空科技主题 */
+page {
+  background-color: #0a1628;
+  color: #e0e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+}
+
+/* 主色调 */
+:root {
+  --primary: #00d4ff;
+  --primary-dark: #0099cc;
+  --accent: #7c3aed;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg-dark: #0a1628;
+  --bg-card: #112240;
+  --bg-input: #1a2744;
+  --border: #1e3050;
+  --text-primary: #e0e8f0;
+  --text-secondary: #8899aa;
+  --text-muted: #5a6a7a;
+}
+
+/* 通用容器 */
+.container {
+  padding: 20rpx 30rpx;
+  min-height: 100vh;
+}
+
+/* 卡片样式 */
+.card {
+  background: linear-gradient(135deg, #112240 0%, #0d1f35 100%);
+  border: 1px solid #1e3050;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 212, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, #00d4ff44, transparent);
+}
+
+/* 按钮样式 */
+.btn-primary {
+  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 212, 255, 0.25);
+  transition: all 0.3s;
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: 0 4rpx 12rpx rgba(0, 212, 255, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #00d4ff;
+  border: 2rpx solid #00d4ff;
+  border-radius: 12rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+}
+
+.btn-sm {
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+}
+
+/* 输入框样式 */
+.input-group {
+  margin-bottom: 30rpx;
+}
+
+.input-label {
+  color: #00d4ff;
+  font-size: 26rpx;
+  margin-bottom: 12rpx;
+  letter-spacing: 2rpx;
+  font-weight: 500;
+}
+
+.input-field {
+  background: #1a2744;
+  border: 1px solid #1e3050;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #e0e8f0;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 4rpx rgba(0, 212, 255, 0.1);
+}
+
+.input-field::placeholder {
+  color: #5a6a7a;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 6rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  letter-spacing: 1rpx;
+}
+
+.tag-pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.tag-processing {
+  background: rgba(0, 212, 255, 0.15);
+  color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+.tag-resolved {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tag-closed {
+  background: rgba(90, 106, 122, 0.15);
+  color: #5a6a7a;
+  border: 1px solid rgba(90, 106, 122, 0.3);
+}
+
+.tag-admin {
+  background: rgba(124, 58, 237, 0.15);
+  color: #7c3aed;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.tag-staff {
+  background: rgba(0, 212, 255, 0.15);
+  color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+/* 加载与空状态 */
+.loading-more {
+  text-align: center;
+  padding: 40rpx;
+  color: #5a6a7a;
+  font-size: 24rpx;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 120rpx 60rpx;
+  color: #5a6a7a;
+}
+
+.empty-state .icon {
+  font-size: 100rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.3;
+}
+
+.empty-state .text {
+  font-size: 28rpx;
+  color: #5a6a7a;
+}
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background: linear-gradient(90deg, transparent, #1e3050, transparent);
+  margin: 30rpx 0;
+}
+
+/* 列表项 */
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1px solid #1e3050;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}

@@ -1,0 +1,150 @@
+/* 管理面板样式 */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 20rpx 0 30rpx;
+}
+
+.header-icon {
+  font-size: 52rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #e0e8f0;
+}
+
+.header-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #5a6a7a;
+  margin-top: 6rpx;
+}
+
+/* 统计网格 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.stat-card-card {
+  background: rgba(13, 31, 53, 0.8);
+  border: 1px solid #1e3050;
+  border-radius: 14rpx;
+  padding: 24rpx;
+}
+
+.s-num {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 700;
+  background: linear-gradient(180deg, #00d4ff, #667eea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.s-label {
+  display: block;
+  font-size: 22rpx;
+  color: #5a6a7a;
+  margin-top: 8rpx;
+}
+
+/* 卡片标题 */
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+  color: #00d4ff;
+}
+
+.title-icon {
+  font-size: 28rpx;
+}
+
+.view-all {
+  margin-left: auto;
+  font-size: 22rpx;
+  color: #5a6a7a;
+  font-weight: 400;
+}
+
+/* 迷你工单项 */
+.mini-ticket {
+  padding: 18rpx 0;
+  border-bottom: 1px solid #1e3050;
+}
+
+.mini-ticket:last-child {
+  border-bottom: none;
+}
+
+.mini-top {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.mini-no {
+  font-size: 22rpx;
+  color: #00d4ff;
+  font-family: monospace;
+}
+
+.mini-cat {
+  font-size: 20rpx;
+  color: #5a6a7a;
+  background: rgba(90, 106, 122, 0.15);
+  padding: 2rpx 10rpx;
+  border-radius: 4rpx;
+}
+
+.mini-handler {
+  font-size: 22rpx;
+  color: #8899aa;
+}
+
+.mini-title {
+  display: block;
+  font-size: 26rpx;
+  color: #e0e8f0;
+  margin-bottom: 6rpx;
+}
+
+.mini-time {
+  font-size: 20rpx;
+  color: #5a6a7a;
+}
+
+.empty-reply {
+  text-align: center;
+  padding: 40rpx 0;
+}
+
+/* 快捷按钮 */
+.quick-btns {
+  display: flex;
+  gap: 20rpx;
+}
+
+.quick-btns .btn-sm {
+  flex: 1;
+  text-align: center;
+}

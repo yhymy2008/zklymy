@@ -1,0 +1,16 @@
+node_modules/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+Thumbs.db
+
+# SQLite / local runtime data
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Editor / IDE
+.vscode/
+.idea/

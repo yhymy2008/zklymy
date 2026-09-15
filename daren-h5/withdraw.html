@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6D5DFC">
+<meta name="format-detection" content="telephone=no">
+<title>提现 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page">
+  <div id="nav"></div>
+
+  <div class="pad-h pad-t">
+    <div class="card pad">
+      <div class="row between">
+        <span class="xs mut">可提现余额（元）</span>
+        <span class="xs mut">待结算 862 元将于 09-20 转为可提现</span>
+      </div>
+      <div class="amount">
+        <span class="amount-u">¥</span>
+        <input class="amount-in" id="amount" type="number" inputmode="decimal" placeholder="0.00" value="3280">
+        <span class="sm brand bold none" id="all">全部提现</span>
+      </div>
+      <div class="row gap8 mt12">
+        <span class="chip" data-v="100">100</span>
+        <span class="chip" data-v="500">500</span>
+        <span class="chip" data-v="1000">1000</span>
+        <span class="chip" data-v="3280">全部</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 到账方式 -->
+  <div class="sect">
+    <span class="sect-t">到账方式</span>
+    <span class="sect-m" onclick="APP.toast('可添加多张银行卡或选择微信零钱')">管理 <i class="ic ic-cr" style="width:9px;height:9px"></i></span>
+  </div>
+  <div class="card inset" id="accounts"></div>
+
+  <!-- 明细 -->
+  <div class="inset mt16">
+    <div class="card pad">
+      <div class="kv"><span class="sm t2">提现金额</span><span class="md bold num" id="sum">¥3,280.00</span></div>
+      <div class="kv" style="padding-top:0"><span class="sm t2">手续费</span><span class="md bold green">¥0.00</span></div>
+      <div class="kv" style="padding-top:0"><span class="sm t2">预计到账</span><span class="sm t1" id="eta">09-15 24:00 前</span></div>
+      <div class="kv" style="padding-top:0"><span class="sm t2">本月剩余免费提现次数</span><span class="sm t1">2 次</span></div>
+    </div>
+  </div>
+
+  <div class="inset mt16">
+    <span class="btn btn-primary btn-block" id="submit">确认提现</span>
+    <div class="xs mut tc mt8">提现即同意《达人结算服务协议》</div>
+  </div>
+
+  <!-- 提现记录 -->
+  <div class="sect">
+    <span class="sect-t">提现记录</span>
+    <span class="sect-m" id="record-more">全部记录 <i class="ic ic-cr" style="width:9px;height:9px"></i></span>
+  </div>
+  <div class="card inset mb20" id="records"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+  var ACCOUNTS = [
+    { key: 'bank', icon: 'card', tone: 'violet', title: '招商银行 储蓄卡', sub: '**** **** **** 8823 · 尾号 8823', badge: '默认' },
+    { key: 'wx', icon: 'msg', tone: 'green', title: '微信零钱', sub: '秒到账 · 单笔上限 5,000 元' }
+  ]
+  var RECORDS = [
+    { date: '09-08 14:22', amount: '¥2,000.00', state: '已到账', type: 'green', to: '招商银行 ****8823' },
+    { date: '08-24 10:05', amount: '¥3,500.00', state: '已到账', type: 'green', to: '招商银行 ****8823' },
+    { date: '08-09 16:41', amount: '¥1,200.00', state: '已到账', type: 'green', to: '微信零钱' }
+  ]
+
+  APP.nav({ title: '提现', theme: 'brand', back: true })
+
+  /* 到账方式 */
+  document.getElementById('accounts').innerHTML = ACCOUNTS.map(function (a, i) {
+    return '<div class="cell line" data-key="' + a.key + '">' +
+      '<div class="ci tone-' + a.tone + '"><i class="ic icw-' + a.icon + '" style="width:19px;height:19px"></i></div>' +
+      '<div class="ct"><div class="ct-t">' + a.title + '</div><div class="ct-s">' + a.sub + '</div></div>' +
+      '<div class="cr gap6">' + (a.badge ? '<span class="badge badge-violet">' + a.badge + '</span>' : '') +
+      '<i class="ic ' + (i === 0 ? 'ic-check' : 'icg-cr') + '" style="width:' + (i === 0 ? 16 : 9) + 'px;height:' + (i === 0 ? 16 : 9) + 'px"></i></div></div>'
+  }).join('')
+
+  document.querySelectorAll('#accounts .cell').forEach(function (el) {
+    el.addEventListener('click', function () {
+      document.querySelectorAll('#accounts .cell').forEach(function (x) {
+        var ic = x.querySelector('.cr i')
+        ic.className = 'ic icg-cr'
+        ic.style.width = '9px'; ic.style.height = '9px'
+      })
+      var ic = el.querySelector('.cr i')
+      ic.className = 'ic ic-check'
+      ic.style.width = '16px'; ic.style.height = '16px'
+      APP.toast('已切换为「' + el.querySelector('.ct-t').textContent + '」')
+    })
+  })
+
+  /* 金额联动 */
+  var input = document.getElementById('amount')
+  var MAX = 3280
+  function sync() {
+    var v = Number(input.value) || 0
+    if (v > MAX) { v = MAX; input.value = MAX }
+    document.getElementById('sum').textContent = '¥' + APP.money(v)
+    document.getElementById('eta').textContent = v > 5000 ? '09-16 24:00 前' : '09-15 24:00 前'
+  }
+  input.addEventListener('input', sync)
+  document.getElementById('all').addEventListener('click', function () {
+    input.value = MAX
+    sync()
+  })
+  document.querySelectorAll('.chip[data-v]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      input.value = el.dataset.v
+      sync()
+    })
+  })
+
+  /* 提交 */
+  document.getElementById('submit').addEventListener('click', function () {
+    var v = Number(input.value) || 0
+    if (v < 100) return APP.toast('最低提现金额为 100 元')
+    if (v > MAX) return APP.toast('超出可提现余额')
+    APP.ok('提现申请已提交，预计 T+1 到账')
+  })
+
+  /* 提现记录 */
+  document.getElementById('records').innerHTML = RECORDS.map(function (r) {
+    return '<div class="cell line">' +
+      '<div class="ci tone-green"><i class="ic icw-coins" style="width:19px;height:19px"></i></div>' +
+      '<div class="ct"><div class="ct-t">提现到' + r.to + '</div>' +
+      '<div class="ct-s">' + r.date + '</div></div>' +
+      '<div class="cr col" style="align-items:flex-end;gap:4px">' +
+      '<span class="md heavy num">' + r.amount + '</span>' +
+      '<span class="badge badge-' + r.type + '">' + r.state + '</span></div></div>'
+  }).join('')
+
+  document.getElementById('record-more').addEventListener('click', function () {
+    APP.toast('完整提现记录建设中')
+  })
+
+  sync()
+})()
+</script>
+</body>
+</html>

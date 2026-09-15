@@ -1,0 +1,155 @@
+<!-- 首页 - 登录/概览 -->
+<view class="page">
+  <!-- 登录状态 -->
+  <view wx:if="{{isLoggedIn}}" class="container">
+    <!-- 顶部欢迎区域 -->
+    <view class="hero-section">
+      <view class="hero-glow"></view>
+      <view class="hero-content">
+        <view class="user-info">
+          <view class="avatar">{{userInfo.realName[0]}}</view>
+          <view class="user-detail">
+            <text class="greeting">欢迎回来</text>
+            <text class="user-name">{{userInfo.realName}}</text>
+            <view class="role-tag">
+              <text class="tag {{userInfo.role === 'admin' ? 'tag-admin' : userInfo.role === 'staff' ? 'tag-staff' : ''}}">
+                {{userInfo.role === 'admin' ? '管理员' : userInfo.role === 'staff' ? '处理员' : '用户'}}
+              </text>
+            </view>
+          </view>
+        </view>
+        <view class="header-actions">
+          <view class="notify-btn" bindtap="goNotifications">
+            <text class="icon-bell">🔔</text>
+            <view wx:if="{{unreadCount > 0}}" class="badge">{{unreadCount}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 统计卡片 -->
+    <view class="stats-row">
+      <view class="stat-card {{index === 0 ? 'active' : ''}}" 
+            wx:for="{{statCards}}" wx:key="key" 
+            bindtap="goFilteredList" data-status="{{item.key}}">
+        <text class="stat-num">{{item.count}}</text>
+        <text class="stat-label">{{item.label}}</text>
+        <view class="stat-bar" style="background: {{item.color}}"></view>
+      </view>
+    </view>
+
+    <!-- 近7天趋势图 -->
+    <view class="card trend-card">
+      <view class="card-title">
+        <text class="title-icon">📈</text>
+        <text>近7天趋势</text>
+        <text class="trend-total">共 {{trendTotal}} 单</text>
+      </view>
+      <view class="chart-container">
+        <view class="bar-chart">
+          <view class="bar-item" wx:for="{{trendData}}" wx:key="date">
+            <text class="bar-count">{{item.count}}</text>
+            <view class="bar" style="height: {{item.height}}px; background: linear-gradient(180deg, #00d4ff, #0099cc44)"></view>
+            <text class="bar-date">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 快捷操作 -->
+    <view class="card quick-actions">
+      <view class="card-title">
+        <text class="title-icon">⚡</text>
+        <text>快捷操作</text>
+      </view>
+      <view class="actions-grid">
+        <view class="action-btn" bindtap="goSubmit">
+          <text class="action-icon">📝</text>
+          <text class="action-text">提交问题</text>
+        </view>
+        <view class="action-btn" bindtap="goMyTickets">
+          <text class="action-icon">📋</text>
+          <text class="action-text">我的工单</text>
+        </view>
+        <view wx:if="{{userInfo.role === 'admin' || userInfo.role === 'staff'}}" 
+              class="action-btn" bindtap="goAdminDashboard">
+          <text class="action-icon">⚙️</text>
+          <text class="action-text">管理面板</text>
+        </view>
+        <view class="action-btn" bindtap="handleLogout">
+          <text class="action-icon">🚪</text>
+          <text class="action-text">退出登录</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 未登录 - 登录/注册表单 -->
+  <view wx:else class="container login-container">
+    <view class="login-header">
+      <view class="logo-icon">
+        <view class="logo-ring"></view>
+        <view class="logo-inner"></view>
+      </view>
+      <text class="app-title">系统问题工单</text>
+      <text class="app-subtitle">Support Ticket System</text>
+    </view>
+
+    <!-- 登录表单 -->
+    <view wx:if="{{!showRegister}}" class="card login-card">
+      <text class="form-title">用户登录</text>
+      
+      <view class="input-group">
+        <text class="input-label">用户名</text>
+        <input class="input-field" placeholder="请输入用户名" 
+               value="{{username}}" bindinput="onUsernameInput" confirm-type="next"/>
+      </view>
+      
+      <view class="input-group">
+        <text class="input-label">密码</text>
+        <input class="input-field" placeholder="请输入密码" 
+               password value="{{password}}" bindinput="onPasswordInput" confirm-type="done" bindconfirm="handleLogin"/>
+      </view>
+
+      <view class="login-tips">
+        <text>测试账号: admin / admin123</text>
+        <text>处理员: staff1 / staff123</text>
+      </view>
+
+      <button class="btn-primary" bindtap="handleLogin" loading="{{loading}}">登 录</button>
+      <text class="switch-link" bindtap="switchToRegister">没有账号？立即注册</text>
+    </view>
+
+    <!-- 注册表单 -->
+    <view wx:else class="card login-card">
+      <text class="form-title">用户注册</text>
+      
+      <view class="input-group">
+        <text class="input-label">用户名</text>
+        <input class="input-field" placeholder="请输入用户名" 
+               value="{{regUsername}}" bindinput="onRegUsernameInput"/>
+      </view>
+
+      <view class="input-group">
+        <text class="input-label">真实姓名</text>
+        <input class="input-field" placeholder="请输入您的姓名" 
+               value="{{regRealName}}" bindinput="onRegRealNameInput"/>
+      </view>
+
+      <view class="input-group">
+        <text class="input-label">手机号</text>
+        <input class="input-field" placeholder="请输入手机号" type="number"
+               value="{{regPhone}}" bindinput="onRegPhoneInput"/>
+      </view>
+      
+      <view class="input-group">
+        <text class="input-label">密码</text>
+        <input class="input-field" placeholder="请输入密码（至少6位）" 
+               password value="{{regPassword}}" bindinput="onRegPasswordInput"/>
+      </view>
+
+      <button class="btn-primary" bindtap="handleRegister" loading="{{loading}}">注 册</button>
+      <text class="switch-link" bindtap="switchToLogin">已有账号？立即登录</text>
+    </view>
+  </view>
+</view>

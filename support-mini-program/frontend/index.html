@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>问题工单系统</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Toast 容器 -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- 主题切换按钮 -->
+  <button class="theme-toggle" id="theme-toggle" title="切换主题">🌓</button>
+
+  <!-- 侧边栏覆盖层（移动端） -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- 移动端菜单按钮 -->
+  <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+
+  <!-- 应用布局 -->
+  <div class="app-layout">
+    <!-- 侧边栏 -->
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content" id="main-content">
+      <div class="page active" id="page-auth"></div>
+      <div class="page" id="page-home"></div>
+      <div class="page" id="page-submit"></div>
+      <div class="page" id="page-my-tickets"></div>
+      <div class="page" id="page-ticket-detail"></div>
+      <div class="page" id="page-admin"></div>
+      <div class="page" id="page-profile"></div>
+      <div class="page" id="page-notifications"></div>
+      <div class="page" id="page-knowledge-base"></div>
+      <div class="page" id="page-kb-detail"></div>
+    </main>
+  </div>
+
+  <!-- 评分弹窗 -->
+  <div class="modal-overlay" id="rating-modal-overlay">
+    <div class="modal" id="rating-modal"></div>
+  </div>
+
+  <script>
+    window.API_BASE = 'http://localhost:3000';
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/shortcuts.js"></script>
+  <script src="/js/websocket-client.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!-- 内容中心：达人的营销弹药库 -->
+<view class="page">
+
+  <!-- ============ 搜索与筛选 ============ -->
+  <view style="background:#FFFFFF;padding:16rpx 32rpx 24rpx">
+    <view class="sbox" bindtap="onSearch" hover-class="cell-hover">
+      <view class="ic icg-search" style="width:34rpx;height:34rpx"></view>
+      <text class="sbox-t">搜索素材名称、标签或场景</text>
+    </view>
+    <scroll-view scroll-x class="chips mt20" show-scrollbar="{{false}}">
+      <view class="row gap12" style="padding-right:32rpx">
+        <view
+          class="chip {{category === item ? 'chip-on' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="*this"
+          data-c="{{item}}"
+          bindtap="onCategory"
+          hover-class="qi-hover"
+        >{{item}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- ============ 主推素材 ============ -->
+  <view class="inset mt24">
+    <view class="card" bindtap="goAsset" data-id="{{featured.id}}" hover-class="cell-hover">
+      <view class="cov cov-1" style="width:100%;height:320rpx;border-radius:32rpx 32rpx 0 0;margin-right:0">
+        <view class="col" style="align-items:center;gap:12rpx">
+          <view class="badge badge-ghost">本周主推</view>
+          <text class="cov-txt" style="font-size:36rpx;line-height:1.35">{{featured.title}}</text>
+        </view>
+      </view>
+      <view class="pad">
+        <text class="sm mut">{{featured.desc}}</text>
+        <view class="acts">
+          <view class="act act-on" catchtap="openShare" data-id="{{featured.id}}" hover-class="act-hover">
+            <view class="ic icw-share" style="width:30rpx;height:30rpx"></view>
+            <text>一键转发</text>
+          </view>
+          <view class="act" catchtap="toPoster" data-id="{{featured.id}}" hover-class="act-hover">
+            <view class="ic icg-image" style="width:30rpx;height:30rpx"></view>
+            <text>生成海报</text>
+          </view>
+          <view class="act" catchtap="copyText" data-id="{{featured.id}}" hover-class="act-hover">
+            <view class="ic icg-copy" style="width:30rpx;height:30rpx"></view>
+            <text>复制文案</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 素材列表 ============ -->
+  <view class="sect">
+    <text class="sect-t">全部素材</text>
+    <text class="sm mut">共 {{assets.length}} 条 · 按转化率排序</text>
+  </view>
+  <view class="card inset">
+    <block wx:for="{{assets}}" wx:key="id">
+      <view wx:if="{{index > 0}}" class="divider"></view>
+      <view class="asset" bindtap="goAsset" data-id="{{item.id}}" hover-class="asset-hover">
+        <view class="cov {{item.cover}}">
+          <text class="cov-txt">{{item.title}}</text>
+          <view class="cov-bar">{{item.type}}</view>
+        </view>
+        <view class="flex1 col">
+          <text class="md bold el2" style="line-height:1.45">{{item.title}}</text>
+          <text class="xs mut mt8 el">{{item.desc}}</text>
+          <view class="row gap10 mt12">
+            <view class="tag tag-on" wx:for="{{item.tags}}" wx:for-item="t" wx:key="*this">{{t}}</view>
+          </view>
+          <view class="row between mt12">
+            <view class="row gap16">
+              <view class="metric">
+                <view class="ic icg-eye" style="width:26rpx;height:26rpx"></view>
+                <text>{{item.views}}</text>
+              </view>
+              <view class="metric">
+                <view class="ic icg-share" style="width:26rpx;height:26rpx"></view>
+                <text>{{item.shares}}</text>
+              </view>
+            </view>
+            <text class="rate num">{{item.rate}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="acts" style="padding:0 30rpx 26rpx;margin-top:0">
+        <view class="act act-on" catchtap="openShare" data-id="{{item.id}}" hover-class="act-hover">
+          <view class="ic icw-share" style="width:28rpx;height:28rpx"></view>
+          <text>一键转发</text>
+        </view>
+        <view class="act" catchtap="toPoster" data-id="{{item.id}}" hover-class="act-hover">
+          <view class="ic icg-image" style="width:28rpx;height:28rpx"></view>
+          <text>生成海报</text>
+        </view>
+        <view class="act" catchtap="copyText" data-id="{{item.id}}" hover-class="act-hover">
+          <view class="ic icg-copy" style="width:28rpx;height:28rpx"></view>
+          <text>复制文案</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view style="height:48rpx"></view>
+
+  <!-- ============ 转发抽屉 ============ -->
+  <view class="mask" wx:if="{{shareOpen}}" bindtap="closeShare"></view>
+  <view class="sheet" wx:if="{{shareOpen}}">
+    <view class="sheet-hd">
+      <view class="col">
+        <text class="sheet-t">转发到</text>
+        <text class="xs mut mt4 el">{{currentTitle}}</text>
+      </view>
+      <view class="pill" bindtap="closeShare" hover-class="cell-hover">取消</view>
+    </view>
+
+    <view class="sheet-ch">
+      <button class="sheet-c" open-type="share" hover-class="qi-hover">
+        <view class="sheet-cico tone-green">
+          <view class="ic icw-msg" style="width:46rpx;height:46rpx"></view>
+        </view>
+        <text class="sheet-ct">微信好友</text>
+      </button>
+      <view class="sheet-c" bindtap="shareGroup" hover-class="qi-hover">
+        <view class="sheet-cico tone-blue">
+          <view class="ic icw-users" style="width:46rpx;height:46rpx"></view>
+        </view>
+        <text class="sheet-ct">微信群</text>
+      </view>
+      <view class="sheet-c" bindtap="shareTimeline" hover-class="qi-hover">
+        <view class="sheet-cico tone-gold">
+          <view class="ic icw-star" style="width:46rpx;height:46rpx"></view>
+        </view>
+        <text class="sheet-ct">朋友圈</text>
+      </view>
+      <view class="sheet-c" bindtap="toPosterFromSheet" hover-class="qi-hover">
+        <view class="sheet-cico tone-violet">
+          <view class="ic icw-image" style="width:46rpx;height:46rpx"></view>
+        </view>
+        <text class="sheet-ct">生成海报</text>
+      </view>
+      <view class="sheet-c" bindtap="copyTextFromSheet" hover-class="qi-hover">
+        <view class="sheet-cico tone-cyan">
+          <view class="ic icw-copy" style="width:46rpx;height:46rpx"></view>
+        </view>
+        <text class="sheet-ct">复制文案</text>
+      </view>
+      <view class="sheet-c" bindtap="copyLink" hover-class="qi-hover">
+        <view class="sheet-cico tone-gray">
+          <view class="ic icw-link" style="width:46rpx;height:46rpx"></view>
+        </view>
+        <text class="sheet-ct">复制链接</text>
+      </view>
+    </view>
+
+    <view class="divider mt20"></view>
+    <view class="mt20">
+      <text class="sm mut">转发寄语（好友收到的推荐语）</text>
+      <view class="row between gap16 mt16" style="align-items:flex-start">
+        <view class="flex1 sheet-input">
+          <text class="xs" style="line-height:1.6">{{draft}}</text>
+        </view>
+        <view class="btn btn-gray btn-sm none" bindtap="rollDraft" hover-class="btn-hover">换一条</view>
+      </view>
+      <view class="row gap12 mt16">
+        <view
+          class="chip {{draftIndex === index ? 'chip-on' : ''}}"
+          wx:for="{{drafts}}"
+          wx:key="*this"
+          data-i="{{index}}"
+          bindtap="pickDraft"
+        >风格{{index + 1}}</view>
+      </view>
+    </view>
+
+    <view class="btn btn-primary btn-block mt24" bindtap="closeShare" hover-class="btn-hover">
+      已完成转发，记录一次
+    </view>
+  </view>
+</view>

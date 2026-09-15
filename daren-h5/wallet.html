@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6D5DFC">
+<meta name="format-detection" content="telephone=no">
+<title>收益中心 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-immersive page-tab">
+  <div id="nav"></div>
+
+  <div class="gh gh-brand">
+    <i class="gh-glow gh-glow-a"></i>
+    <i class="gh-glow gh-glow-b"></i>
+    <div style="position:relative">
+      <div class="sm" style="opacity:.8">可提现余额（元）</div>
+      <div class="row gap12" style="align-items:baseline">
+        <span class="num" style="font-size:36px;font-weight:700;line-height:1.16">3,280.00</span>
+        <span class="btn btn-ghost btn-xs" onclick="APP.go('withdraw.html')">立即提现</span>
+      </div>
+      <div class="xs mt4" style="opacity:.72">每月 1 / 15 日自动结算 · 已提现 38,718 元</div>
+    </div>
+    <div class="stats mt24" style="position:relative">
+      <div class="stat"><div class="stat-n num" style="font-size:16px">42,860</div><div class="stat-l">累计收益</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num" style="font-size:16px">862</div><div class="stat-l">待结算</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num" style="font-size:16px">241</div><div class="stat-l">日均收益</div></div>
+    </div>
+  </div>
+
+  <!-- 收益构成 -->
+  <div class="card inset overlap pad">
+    <div class="row between">
+      <span class="md bold">收益构成</span>
+      <span class="xs mut">近 30 天</span>
+    </div>
+    <div class="row gap16 mt16" style="align-items:center">
+      <div class="donut" id="donut"></div>
+      <div class="flex1 col gap10" id="legend"></div>
+    </div>
+    <div class="divider mt16"></div>
+    <div class="note note-v mt16">
+      <i class="ic ic-trend" style="width:16px;height:16px;margin-top:1px"></i>
+      <div class="xs t2 lh16 flex1">团队分佣占比升至 20%，本月新增 5 位直属达人，多带一份被动收入。</div>
+    </div>
+  </div>
+
+  <!-- 周收益 -->
+  <div class="inset mt16">
+    <div class="card pad">
+      <div class="row between">
+        <span class="md bold">近 7 日收益</span>
+        <span class="xs mut">日均 ¥241</span>
+      </div>
+      <div class="chart mt12" id="chart"></div>
+    </div>
+  </div>
+
+  <!-- 钱包工具 -->
+  <div class="sect">
+    <span class="sect-t">资金管理</span>
+  </div>
+  <div class="card inset" id="tools"></div>
+
+  <!-- 最近账单 -->
+  <div class="sect">
+    <span class="sect-t">最近佣金</span>
+    <span class="sect-m" onclick="APP.go('commission.html')">全部明细 <i class="ic ic-cr" style="width:9px;height:9px"></i></span>
+  </div>
+  <div class="card inset" id="bills"></div>
+
+  <div class="inset mt16 mb20">
+    <div class="note">
+      <i class="ic ic-clock" style="width:18px;height:18px;margin-top:1px"></i>
+      <div class="flex1">
+        <div class="md bold">结算规则</div>
+        <div class="xs mut mt4 lh16">订单确认收货后 7 天佣金转可提现，退款订单自动扣回。提现 T+1 到账，最低 100 元起提。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tab"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+  var E = D.earnings
+
+  APP.nav({ title: '收益中心', theme: 'brand' })
+  APP.tab('wallet')
+
+  /* 环形占比：conic-gradient 一次画完，无需引入图表库 */
+  var acc = 0
+  var stops = E.composition.map(function (c) {
+    var from = acc
+    acc += c.percent
+    return c.color + ' ' + from + '% ' + acc + '%'
+  }).join(', ')
+  document.getElementById('donut').style.background = 'conic-gradient(' + stops + ')'
+
+  document.getElementById('legend').innerHTML = E.composition.map(function (c) {
+    return '<div class="row between">' +
+      '<span class="legend"><i class="legend-dot" style="background:' + c.color + '"></i>' + c.label + '</span>' +
+      '<span class="md bold num">' + c.percent + '%</span></div>'
+  }).join('')
+
+  /* 柱状图 */
+  document.getElementById('chart').innerHTML = E.weekly.map(function (w) {
+    return '<div class="chart-i">' +
+      '<i class="chart-c' + (w.highlight ? ' chart-on' : '') + '" style="height:' + Math.round(w.height * 0.76) + 'px"></i>' +
+      '<span class="chart-l">' + w.label + '</span></div>'
+  }).join('')
+
+  /* 资金管理 */
+  var tools = document.getElementById('tools')
+  tools.innerHTML = D.walletTools.map(function (t) {
+    var badge = t.badge ? '<span class="badge badge-gray">' + t.badge + '</span>' : ''
+    return '<div class="cell line" data-key="' + t.key + '">' +
+      '<div class="ci tone-' + t.tone + '"><i class="ic icw-' + t.icon + '" style="width:19px;height:19px"></i></div>' +
+      '<div class="ct"><div class="ct-t">' + t.title + '</div><div class="ct-s el">' + t.sub + '</div></div>' +
+      '<div class="cr gap6">' + badge + '<i class="ic icg-cr" style="width:9px;height:9px"></i></div></div>'
+  }).join('')
+  tools.querySelectorAll('[data-key]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var t = D.walletTools.filter(function (x) { return x.key === el.dataset.key })[0]
+      if (t.url) return APP.go(t.url)
+      APP.toast(t.toast)
+    })
+  })
+
+  /* 最近佣金 */
+  document.getElementById('bills').innerHTML = D.bills.slice(0, 3).map(function (b) {
+    return '<div class="cell line">' +
+      '<div class="ci tone-' + (b.negative ? 'gray' : 'gold') + '"><i class="ic icw-' + b.icon + '" style="width:19px;height:19px"></i></div>' +
+      '<div class="ct"><div class="ct-t el">' + b.product + '</div>' +
+      '<div class="ct-s">' + b.from + ' · ' + b.time + '</div></div>' +
+      '<div class="cr col" style="align-items:flex-end;gap:4px">' +
+      '<span class="md heavy num ' + (b.negative ? 'mut' : 'gold') + '">' + b.amount + '</span>' +
+      '<span class="badge badge-' + b.stateType + '">' + b.state + '</span></div></div>'
+  }).join('')
+})()
+</script>
+</body>
+</html>

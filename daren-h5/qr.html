@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6D5DFC">
+<meta name="format-detection" content="telephone=no">
+<title>推广 · 分销码 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-immersive page-tab">
+  <div id="nav"></div>
+
+  <div class="gh gh-brand">
+    <i class="gh-glow gh-glow-a"></i>
+    <i class="gh-glow gh-glow-b"></i>
+    <div style="position:relative">
+      <div class="xl heavy">我的分销码</div>
+      <div class="sm mt4" style="opacity:.82">客户扫码即绑定关系，30 天内下单都算你的业绩</div>
+    </div>
+    <div class="stats mt24" style="position:relative">
+      <div class="stat"><div class="stat-n num">1,286</div><div class="stat-l">累计扫码</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num">86</div><div class="stat-l">新客注册</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num">23</div><div class="stat-l">成交订单</div></div>
+    </div>
+  </div>
+
+  <!-- 分销码卡 -->
+  <div class="card inset overlap">
+    <div class="code-card">
+      <div class="qr" id="qr"></div>
+      <div class="row gap6 mt16">
+        <i class="ic ic-qr" style="width:15px;height:15px"></i>
+        <span class="sm t2">长按识别 · 扫码即绑定</span>
+      </div>
+
+      <div class="row between mt16" style="width:100%;background:#F6F4FF;border-radius:12px;padding:11px 13px">
+        <div>
+          <div class="xs mut">我的邀请码</div>
+          <div class="md heavy brand num mt4">DAREN-8823</div>
+        </div>
+        <span class="btn btn-rim btn-xs" id="copy-code">复制</span>
+      </div>
+
+      <div class="row gap8 mt16" style="width:100%">
+        <span class="btn btn-gray flex1" id="save-qr"><i class="ic icg-down" style="width:15px;height:15px;margin-right:5px"></i>保存到相册</span>
+        <span class="btn btn-primary flex1" id="share-qr"><i class="ic icw-share" style="width:15px;height:15px;margin-right:5px"></i>分享给客户</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 转化漏斗 -->
+  <div class="inset mt16">
+    <div class="card pad">
+      <div class="row between">
+        <span class="md bold">扫码转化漏斗</span>
+        <span class="badge badge-green">高于同级 2.1 个百分点</span>
+      </div>
+      <div class="funnel mt16">
+        <div class="funnel-i"><div class="funnel-n num">1,286</div><div class="funnel-l">扫码</div></div>
+        <i class="ic icg-cr" style="width:12px;height:12px;opacity:.5"></i>
+        <div class="funnel-i"><div class="funnel-n num">86</div><div class="funnel-l">注册</div></div>
+        <i class="ic icg-cr" style="width:12px;height:12px;opacity:.5"></i>
+        <div class="funnel-i"><div class="funnel-n num">23</div><div class="funnel-l">成交</div></div>
+      </div>
+      <div class="divider mt16"></div>
+      <div class="kv">
+        <span class="sm t2">扫码 → 注册转化率</span>
+        <span class="rate">6.7%</span>
+      </div>
+      <div class="kv" style="padding-top:0">
+        <span class="sm t2">注册 → 成交转化率</span>
+        <span class="rate">26.7%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 推广工具 -->
+  <div class="sect">
+    <span class="sect-t">推广工具</span>
+    <span class="sect-m">已解锁 4 项</span>
+  </div>
+  <div class="card inset" id="tools"></div>
+
+  <div class="inset mt16 mb20">
+    <div class="note note-g">
+      <i class="ic ic-shield" style="width:18px;height:18px;margin-top:1px"></i>
+      <div class="flex1">
+        <div class="md bold">绑定与结算说明</div>
+        <div class="xs mut mt4 lh16">1. 客户首次扫码即绑定，30 天锁客期内下单均计入你的业绩；<br>
+        2. 佣金在客户确认收货后 7 天结算，T+1 到账；<br>
+        3. 退款订单会自动扣回对应佣金，可在佣金明细中追溯。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tab"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+
+  APP.nav({ title: '推广', theme: 'brand', right: 'share' })
+  APP.tab('qr')
+
+  /* 二维码（演示：CSS 绘制；接真实接口后替换为 <img src="小程序码">） */
+  document.getElementById('qr').innerHTML = APP.qrArt()
+
+  document.getElementById('copy-code').addEventListener('click', function () {
+    APP.copy(D.user.inviteCode, '邀请码已复制')
+  })
+
+  document.getElementById('save-qr').addEventListener('click', function () {
+    APP.toast('手机端长按二维码即可保存到相册')
+  })
+
+  document.getElementById('share-qr').addEventListener('click', function () {
+    APP.shareGuide('friend')
+  })
+
+  /* 推广工具 */
+  var tools = document.getElementById('tools')
+  tools.innerHTML = D.qrTools.map(function (t) {
+    var badge = t.badge ? '<span class="badge badge-gold">' + t.badge + '</span>' : ''
+    return '<div class="cell line" data-key="' + t.key + '">' +
+      '<div class="ci tone-' + t.tone + '"><i class="ic icw-' + t.icon + '" style="width:19px;height:19px"></i></div>' +
+      '<div class="ct"><div class="ct-t">' + t.title + '</div><div class="ct-s el">' + t.sub + '</div></div>' +
+      '<div class="cr gap6">' + badge + '<i class="ic icg-cr" style="width:9px;height:9px"></i></div></div>'
+  }).join('')
+
+  tools.querySelectorAll('[data-key]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var t = D.qrTools.filter(function (x) { return x.key === el.dataset.key })[0]
+      if (t.url) return APP.go(t.url)
+      if (t.copy === 'link') return APP.copy(APP.link('index.html'), '推广短链已复制')
+      if (t.guide) return APP.shareGuide('timeline')
+      APP.toast(t.toast)
+    })
+  })
+})()
+</script>
+</body>
+</html>

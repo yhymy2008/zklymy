@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6D5DFC">
+<meta name="format-detection" content="telephone=no">
+<title>工作台 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-immersive page-tab">
+  <div id="nav"></div>
+
+  <!-- 沉浸式渐变头部 -->
+  <div class="gh gh-brand">
+    <i class="gh-glow gh-glow-a"></i>
+    <i class="gh-glow gh-glow-b"></i>
+    <div class="row gap12" style="position:relative">
+      <div class="av av-lg av-ring">雨</div>
+      <div class="flex1">
+        <div class="row gap6">
+          <span class="lg heavy">王小雨</span>
+          <span class="badge badge-ghost">Lv.4 黄金分销官</span>
+        </div>
+        <div class="xs mt4" style="opacity:.8">ID 8823 · 入驻 268 天 · 佣金比例 25%</div>
+      </div>
+      <i class="ic icw-cr" style="width:10px;height:10px;opacity:.7"></i>
+    </div>
+
+    <div class="row between mt24" style="position:relative;align-items:flex-end">
+      <div>
+        <div class="xs" style="opacity:.78">今日预估收益（元）</div>
+        <div class="row gap8" style="align-items:baseline">
+          <span class="num" style="font-size:34px;font-weight:700;line-height:1.1">286.50</span>
+          <span class="badge badge-ghost">+12.4%</span>
+        </div>
+      </div>
+      <div class="tc">
+        <div class="xs" style="opacity:.78">今日访客</div>
+        <div class="num lg bold mt4">328</div>
+      </div>
+    </div>
+
+    <div class="stats mt24" style="position:relative">
+      <div class="stat"><div class="stat-n num">12</div><div class="stat-l">今日新增客户</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num">9</div><div class="stat-l">今日成交订单</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num">86</div><div class="stat-l">累计绑定客户</div></div>
+    </div>
+  </div>
+
+  <!-- 余额卡（上浮压住渐变） -->
+  <div class="card inset overlap pad">
+    <div class="row between">
+      <div>
+        <div class="xs mut">可提现余额（元）</div>
+        <div class="row gap8 mt4" style="align-items:baseline">
+          <span class="num" style="font-size:26px;font-weight:700">3,280</span>
+          <span class="xs mut">.00</span>
+        </div>
+      </div>
+      <span class="btn btn-primary btn-sm" onclick="APP.go('withdraw.html')">立即提现</span>
+    </div>
+    <div class="divider mt12"></div>
+    <div class="stats mt12">
+      <div class="stat stat-dark"><div class="stat-n num" style="font-size:16px">42,860</div><div class="stat-l">累计收益</div></div>
+      <i class="vline vline-dark"></i>
+      <div class="stat stat-dark"><div class="stat-n num" style="font-size:16px">862</div><div class="stat-l">待结算</div></div>
+      <i class="vline vline-dark"></i>
+      <div class="stat stat-dark"><div class="stat-n num" style="font-size:16px">38,718</div><div class="stat-l">已提现</div></div>
+    </div>
+  </div>
+
+  <!-- 平台公告 -->
+  <div class="inset mt16">
+    <div class="notice" id="notice-bar">
+      <i class="ic ic-mega" style="width:16px;height:16px"></i>
+      <div class="flex1 el sm t2" id="notice-txt"></div>
+      <i class="ic icg-cr" style="width:9px;height:9px"></i>
+    </div>
+  </div>
+
+  <!-- 快捷入口 -->
+  <div class="card inset mt16" style="padding:6px 4px">
+    <div class="qgrid" id="qgrid"></div>
+  </div>
+
+  <!-- 成长进度 -->
+  <div class="inset mt16">
+    <div class="card pad">
+      <div class="row between">
+        <div class="row gap8">
+          <i class="ic ic-crown" style="width:18px;height:18px"></i>
+          <span class="md bold">距离 Lv.5 钻石分销官</span>
+        </div>
+        <span class="badge badge-gold">佣金 25% → 28%</span>
+      </div>
+      <div class="bar mt12"><i class="bar-i" id="growth-bar" style="width:0"></i></div>
+      <div class="row between mt8">
+        <span class="xs mut">成长值 2,860 / 3,000</span>
+        <span class="xs brand bold" onclick="APP.go('tasks.html')">还差 1,860 · 去做任务 &gt;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 今日任务 -->
+  <div class="sect">
+    <span class="sect-t">今日任务</span>
+    <span class="sect-m" onclick="APP.go('tasks.html')">全部任务 <i class="ic ic-cr" style="width:9px;height:9px"></i></span>
+  </div>
+  <div class="card inset" id="task-list"></div>
+
+  <!-- 热门素材 -->
+  <div class="sect">
+    <span class="sect-t">热门素材</span>
+    <span class="sect-m" onclick="APP.go('content.html')">内容中心 <i class="ic ic-cr" style="width:9px;height:9px"></i></span>
+  </div>
+  <div class="hscroll">
+    <div class="hscroll-in" id="hot-list"></div>
+  </div>
+
+  <!-- 邀请达人 -->
+  <div class="inset mt16 mb20">
+    <div class="note note-v">
+      <i class="ic ic-users" style="width:18px;height:18px;margin-top:1px"></i>
+      <div class="flex1">
+        <div class="md bold">邀请达人入伙</div>
+        <div class="xs mut mt4 lh16">好友通过你的链接入驻，奖励 ¥50/人，并永久享受其 8% 团队分佣。</div>
+        <div class="row gap8 mt12">
+          <span class="btn btn-primary btn-xs" onclick="APP.shareGuide('timeline')">生成邀请海报</span>
+          <span class="btn btn-rim btn-xs" onclick="APP.copy(APP.link('index.html'),'邀请链接已复制')">复制邀请链接</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tab"></div>
+
+<!-- 消息通知抽屉 -->
+<div class="mask" id="mask-notice"></div>
+<div class="sheet" id="sheet-notice">
+  <div class="sheet-hd">
+    <span class="sheet-t">消息通知</span>
+    <span class="sm mut" onclick="APP.closeSheet('notice')">关闭</span>
+  </div>
+  <div id="notice-list"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+
+  APP.nav({ title: '工作台', theme: 'brand', right: 'bell' })
+  APP.tab('index')
+
+  /* 公告条 */
+  document.getElementById('notice-txt').textContent = D.notices[0].title
+  document.getElementById('notice-bar').addEventListener('click', function () {
+    APP.openSheet('notice')
+  })
+
+  /* 通知列表 */
+  document.getElementById('notice-list').innerHTML = D.notices.map(function (n) {
+    return '<div class="cell line">' +
+      '<div class="ci tone-violet"><i class="ic icw-' + n.icon + '" style="width:19px;height:19px"></i></div>' +
+      '<div class="ct"><div class="ct-t">' + n.title + '</div>' +
+      '<div class="ct-s el2">' + n.sub + '</div></div>' +
+      '<div class="cr xs">' + n.time + '</div></div>'
+  }).join('')
+
+  /* 快捷入口 */
+  var qgrid = document.getElementById('qgrid')
+  qgrid.innerHTML = D.quickEntries.map(function (e) {
+    return '<div class="qi" data-key="' + e.key + '">' +
+      '<div class="qi-ic tone-' + e.tone + '"><i class="ic icw-' + e.icon + '" style="width:21px;height:21px"></i></div>' +
+      '<div class="qi-t">' + e.label + '</div></div>'
+  }).join('')
+  qgrid.querySelectorAll('.qi').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var e = D.quickEntries.filter(function (x) { return x.key === el.dataset.key })[0]
+      if (!e) return
+      if (e.url) return APP.go(e.url)
+      if (e.guide) return APP.shareGuide('friend')
+      APP.toast(e.toast)
+    })
+  })
+
+  /* 成长进度条（延迟赋值触发过渡动画） */
+  setTimeout(function () {
+    document.getElementById('growth-bar').style.width = D.overview.growthPercent + '%'
+  }, 120)
+
+  /* 今日任务 */
+  var taskList = document.getElementById('task-list')
+  taskList.innerHTML = D.dailyTasks.map(function (t) {
+    var done = t.state === 'done'
+    var right = done
+      ? '<span class="badge badge-green">已完成</span>'
+      : '<span class="btn btn-primary btn-xs">去完成</span>'
+    return '<div class="cell line" data-key="' + t.id + '">' +
+      '<div class="ci tone-' + (done ? 'green' : 'violet') + '"><i class="ic icw-' + t.icon + '" style="width:19px;height:19px"></i></div>' +
+      '<div class="ct"><div class="ct-t">' + t.title + '</div><div class="ct-s">' + t.sub + '</div></div>' +
+      '<div class="cr">' + right + '</div></div>'
+  }).join('')
+  taskList.querySelectorAll('[data-key]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var t = D.dailyTasks.filter(function (x) { return x.id === el.dataset.key })[0]
+      if (t && t.url) return APP.go(t.url)
+      APP.ok('奖励已领取')
+    })
+  })
+
+  /* 热门素材 */
+  document.getElementById('hot-list').innerHTML = D.assets.slice(0, 3).map(function (a) {
+    return '<div class="card hcard" data-id="' + a.id + '" style="overflow:hidden">' +
+      '<div class="cov cov-lg cov-' + a.cover.split('-')[1] + '" style="height:110px;border-radius:0">' +
+      '<span class="cov-txt">' + a.title + '</span>' +
+      '<span class="cov-bar">' + a.type + ' · 转化率 ' + a.rate + '</span></div>' +
+      '<div class="pad">' +
+      '<div class="md bold el2" style="min-height:40px">' + a.title + '</div>' +
+      '<div class="row between mt8">' +
+      '<span class="metric"><i class="ic icg-eye" style="width:12px;height:12px"></i>' + a.views + '</span>' +
+      '<span class="btn btn-primary btn-xs">去转发</span>' +
+      '</div></div></div>'
+  }).join('')
+  document.getElementById('hot-list').querySelectorAll('[data-id]').forEach(function (el) {
+    el.addEventListener('click', function () { APP.go('asset.html') })
+  })
+})()
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!-- 工单详情页 -->
+<view class="container" wx:if="{{ticket}}">
+  <!-- 工单头部 -->
+  <view class="card detail-header">
+    <view class="detail-top">
+      <view class="ticket-number-row">
+        <text class="tk-badge">#{{ticket.ticket_no}}</text>
+        <text class="tag tag-{{ticket.status}}">{{statusMap[ticket.status]}}</text>
+        <text wx:if="{{ticket.priority === 'urgent' || ticket.priority === 'high'}}" 
+              class="tag" style="background:rgba(245,158,11,0.15);color:#f59e0b;font-size:22rpx">
+          {{ticket.priority === 'urgent' ? '紧急' : '高优'}}
+        </text>
+      </view>
+      <text class="detail-title">{{ticket.title}}</text>
+      <view class="detail-meta">
+        <text class="meta-text">📅 {{ticket.created_at}}</text>
+        <text class="meta-text">🏷 {{ticket.category}}</text>
+        <text class="meta-text">👤 {{ticket.creator_name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 问题描述 -->
+  <view class="card">
+    <text class="section-label">问题描述</text>
+    <text class="desc-content">{{ticket.description}}</text>
+  </view>
+
+  <!-- 处理信息 -->
+  <view wx:if="{{ticket.handler_name}}" class="card">
+    <text class="section-label">处理人</text>
+    <view class="handler-info">
+      <text class="handler-avatar">🧑‍💻</text>
+      <view class="handler-detail">
+        <text class="handler-name">{{ticket.handler_name}}</text>
+        <text class="handler-time">接单时间: {{ticket.updated_at}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 处理方案 -->
+  <view wx:if="{{ticket.solution && ticket.status === 'resolved'}}" class="card solution-card">
+    <text class="section-label">✅ 处理方案</text>
+    <text class="desc-content">{{ticket.solution}}</text>
+  </view>
+
+  <!-- 回复列表 -->
+  <view class="card">
+    <text class="section-label">💬 沟通记录</text>
+    <view wx:if="{{ticket.replies && ticket.replies.length > 0}}" class="replies-list">
+      <view class="reply-item {{item.user_role === 'admin' || item.user_role === 'staff' ? 'reply-staff' : 'reply-user'}}" 
+            wx:for="{{ticket.replies}}" wx:key="id">
+        <view class="reply-header">
+          <text class="reply-name">{{item.user_name}}</text>
+          <text class="tag tag-{{item.user_role === 'admin' ? 'admin' : item.user_role === 'staff' ? 'staff' : ''}}" 
+                style="font-size:18rpx">
+            {{item.user_role === 'admin' ? '管理员' : item.user_role === 'staff' ? '处理员' : '用户'}}
+          </text>
+          <text class="reply-time">{{item.created_at}}</text>
+        </view>
+        <text class="reply-content">{{item.content}}</text>
+      </view>
+    </view>
+    <view wx:else class="empty-replies">
+      <text>暂无沟通记录</text>
+    </view>
+  </view>
+
+  <!-- 操作区域 - 提交回复 -->
+  <view wx:if="{{ticket.status === 'pending' || ticket.status === 'processing'}}" class="card">
+    <text class="section-label">回复</text>
+    <textarea class="textarea-field" placeholder="输入回复内容..." 
+              value="{{replyContent}}" bindinput="onReplyInput" auto-height/>
+    <button class="btn-primary btn-sm" style="margin-top:20rpx;width:auto;" bindtap="handleReply">发送回复</button>
+  </view>
+
+  <!-- 操作区域 - 处理员接单 -->
+  <view wx:if="{{ticket.status === 'pending' && (userRole === 'admin' || userRole === 'staff')}}" class="card action-card">
+    <text class="section-label">⚡ 工单操作</text>
+    <button class="btn-primary" bindtap="handleClaim">接单处理</button>
+  </view>
+
+  <!-- 操作区域 - 处理员解决 -->
+  <view wx:if="{{ticket.status === 'processing' && (userRole === 'admin' || userRole === 'staff') && ticket.handler_id === userId}}" class="card action-card">
+    <text class="section-label">⚡ 处理完成</text>
+    <textarea class="textarea-field" placeholder="请输入处理方案..." 
+              value="{{solution}}" bindinput="onSolutionInput" auto-height/>
+    <button class="btn-success" style="margin-top:20rpx;width:100%;" bindtap="handleResolve">标记为已解决</button>
+  </view>
+
+  <!-- 操作区域 - 用户评价 -->
+  <view wx:if="{{ticket.status === 'resolved' && userRole === 'user' && ticket.user_id === userId && !ticket.rating}}" class="card action-card">
+    <text class="section-label">⭐ 服务评价</text>
+    <view class="rating-input">
+      <text class="star-input {{index < currentRating ? 'active' : ''}}" 
+            wx:for="{{[1,2,3,4,5]}}" wx:key="*this"
+            bindtap="setRating" data-rating="{{item}}">★</text>
+    </view>
+    <textarea class="textarea-field" placeholder="评价内容（选填）..." 
+              value="{{feedbackComment}}" bindinput="onFeedbackInput" auto-height/>
+    <button class="btn-primary" style="margin-top:20rpx;width:100%;" bindtap="handleRate">提交评价</button>
+  </view>
+
+  <!-- 用户关闭工单 -->
+  <view wx:if="{{ticket.status === 'resolved' && ticket.user_id === userId}}" class="card action-card">
+    <button class="btn-secondary" style="width:100%;" bindtap="handleClose">关闭工单</button>
+  </view>
+</view>

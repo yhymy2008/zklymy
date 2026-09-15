@@ -1,0 +1,183 @@
+/* 工单详情样式 */
+.detail-header {
+  margin-top: 20rpx;
+}
+
+.ticket-number-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-wrap: wrap;
+  margin-bottom: 16rpx;
+}
+
+.tk-badge {
+  font-size: 24rpx;
+  color: #00d4ff;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+
+.detail-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #e0e8f0;
+  margin-bottom: 16rpx;
+  line-height: 1.4;
+}
+
+.detail-meta {
+  display: flex;
+  gap: 20rpx;
+  flex-wrap: wrap;
+}
+
+.meta-text {
+  font-size: 22rpx;
+  color: #5a6a7a;
+}
+
+.section-label {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #00d4ff;
+  margin-bottom: 16rpx;
+  letter-spacing: 2rpx;
+}
+
+.desc-content {
+  font-size: 28rpx;
+  color: #8899aa;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* 处理人信息 */
+.handler-info {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.handler-avatar {
+  font-size: 48rpx;
+}
+
+.handler-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.handler-name {
+  font-size: 28rpx;
+  color: #e0e8f0;
+  font-weight: 500;
+}
+
+.handler-time {
+  font-size: 22rpx;
+  color: #5a6a7a;
+}
+
+/* 处理方案 */
+.solution-card {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* 回复列表 */
+.replies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.reply-item {
+  padding: 20rpx;
+  border-radius: 12rpx;
+  background: rgba(0, 212, 255, 0.03);
+  border: 1px solid #1e3050;
+}
+
+.reply-item.reply-staff {
+  background: rgba(0, 212, 255, 0.06);
+  border-color: rgba(0, 212, 255, 0.15);
+}
+
+.reply-item.reply-user {
+  background: rgba(124, 58, 237, 0.03);
+  border-color: rgba(124, 58, 237, 0.1);
+}
+
+.reply-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.reply-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #e0e8f0;
+}
+
+.reply-time {
+  font-size: 20rpx;
+  color: #5a6a7a;
+  margin-left: auto;
+}
+
+.reply-content {
+  font-size: 26rpx;
+  color: #8899aa;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.empty-replies {
+  text-align: center;
+  padding: 40rpx 0;
+  color: #5a6a7a;
+  font-size: 24rpx;
+}
+
+/* 操作卡片 */
+.action-card {
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+/* 评价星级 */
+.rating-input {
+  display: flex;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 20rpx 0;
+}
+
+.star-input {
+  font-size: 60rpx;
+  color: #2a3a4a;
+  transition: all 0.3s;
+}
+
+.star-input.active {
+  color: #f59e0b;
+  text-shadow: 0 0 20rpx rgba(245, 158, 11, 0.4);
+}
+
+/* 文本域复用 */
+.textarea-field {
+  background: #1a2744;
+  border: 1px solid #1e3050;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #e0e8f0;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 140rpx;
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="format-detection" content="telephone=no">
+<title>任务中心 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page">
+  <div id="nav"></div>
+
+  <!-- 成长值概览 -->
+  <div class="gh gh-brand" style="padding-top:16px;border-radius:0 0 20px 20px">
+    <i class="gh-glow gh-glow-a"></i>
+    <div class="row between" style="position:relative">
+      <div>
+        <div class="sm" style="opacity:.8">当前成长值</div>
+        <div class="num" style="font-size:32px;font-weight:700;line-height:1.2">2,860</div>
+        <div class="xs mt4" style="opacity:.78">今日已获得 15 成长值</div>
+      </div>
+      <div class="tc">
+        <div class="badge badge-ghost">Lv.4 黄金分销官</div>
+        <div class="xs mt8" style="opacity:.78">距 Lv.5 还差 1,860</div>
+      </div>
+    </div>
+    <div class="bar mt16" style="position:relative;background:rgba(255,255,255,.24)">
+      <i class="bar-i bar-gold" id="bar" style="width:0"></i>
+    </div>
+  </div>
+
+  <!-- 每日任务 -->
+  <div class="sect">
+    <span class="sect-t">每日任务</span>
+    <span class="sect-m">每日 00:00 重置</span>
+  </div>
+  <div class="card inset" id="daily"></div>
+
+  <!-- 成长任务 -->
+  <div class="sect">
+    <span class="sect-t">成长任务</span>
+  </div>
+  <div class="card inset pad" id="grow"></div>
+
+  <div class="inset mt16 mb20">
+    <div class="card pad">
+      <div class="row between">
+        <span class="md bold">成长值能做什么</span>
+        <span class="badge badge-violet">等级越高佣金越高</span>
+      </div>
+      <div class="divider mt12"></div>
+      <div class="tl mt16">
+        <div class="tl-i tl-on">
+          <div class="md bold">Lv.4 黄金分销官 · 当前</div>
+          <div class="xs mut mt4">自购佣金 25% · 团队分佣 8%</div>
+        </div>
+        <div class="tl-i">
+          <div class="md bold">Lv.5 钻石分销官 · 还差 1,860 成长值</div>
+          <div class="xs mut mt4">自购佣金 28% · 团队分佣 10% · 专属客服</div>
+        </div>
+        <div class="tl-i" style="padding-bottom:0">
+          <div class="md bold">Lv.6 首席分销官 · 未解锁</div>
+          <div class="xs mut mt4">自购佣金 32% · 团队分佣 12% · 平台联合推广</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+  var daily = D.allTasks.filter(function (t) { return t.group === 'daily' })
+  var grow = D.allTasks.filter(function (t) { return t.group === 'grow' })
+
+  APP.nav({ title: '任务中心', back: true })
+
+  setTimeout(function () { document.getElementById('bar').style.width = '73%' }, 120)
+
+  /* 每日任务 */
+  var host = document.getElementById('daily')
+  host.innerHTML = daily.map(function (t) {
+    var right
+    if (t.state === 'done') right = '<span class="badge badge-green">已完成</span>'
+    else if (t.state === 'claim') right = '<span class="btn btn-gold btn-xs">' + t.action + '</span>'
+    else right = '<span class="btn btn-primary btn-xs">' + t.action + '</span>'
+    return '<div class="cell line" data-id="' + t.id + '">' +
+      '<div class="ci tone-' + (t.state === 'done' ? 'green' : t.state === 'claim' ? 'gold' : 'violet') + '">' +
+      '<i class="ic icw-' + t.icon + '" style="width:19px;height:19px"></i></div>' +
+      '<div class="ct"><div class="ct-t">' + t.title + '</div><div class="ct-s">' + t.sub + '</div></div>' +
+      '<div class="cr">' + right + '</div></div>'
+  }).join('')
+
+  host.querySelectorAll('[data-id]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var t = daily.filter(function (x) { return x.id === el.dataset.id })[0]
+      if (!t) return
+      if (t.state === 'done') return APP.toast('该任务今日已完成')
+      if (t.state === 'claim') return APP.ok('10 成长值已领取')
+      if (t.url) return APP.go(t.url)
+      APP.ok('任务已完成')
+    })
+  })
+
+  /* 成长任务 */
+  document.getElementById('grow').innerHTML = grow.map(function (t) {
+    return '<div style="margin-bottom:16px">' +
+      '<div class="row gap8">' +
+      '<div class="ci ci-sm tone-violet" style="margin-right:0"><i class="ic icw-' + t.icon + '" style="width:15px;height:15px"></i></div>' +
+      '<div class="flex1"><div class="md bold">' + t.title + '</div>' +
+      '<div class="xs mut mt4">' + t.sub + '</div></div>' +
+      '<span class="md heavy brand num">' + t.percent + '%</span>' +
+      '</div>' +
+      '<div class="bar mt8"><i class="bar-i" style="width:' + t.percent + '%"></i></div>' +
+      '</div>'
+  }).join('')
+})()
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!-- 工单管理页 -->
+<view class="container">
+  <!-- 筛选 -->
+  <view class="filter-bar">
+    <view class="filter-tab {{currentStatus === '' ? 'active' : ''}}" bindtap="switchStatus" data-status="">
+      <text>全部({{statusCount.total}})</text>
+    </view>
+    <view class="filter-tab {{currentStatus === 'pending' ? 'active' : ''}}" bindtap="switchStatus" data-status="pending">
+      <text>待处理({{statusCount.pending}})</text>
+    </view>
+    <view class="filter-tab {{currentStatus === 'processing' ? 'active' : ''}}" bindtap="switchStatus" data-status="processing">
+      <text>处理中({{statusCount.processing}})</text>
+    </view>
+    <view class="filter-tab {{currentStatus === 'resolved' ? 'active' : ''}}" bindtap="switchStatus" data-status="resolved">
+      <text>已解决({{statusCount.resolved}})</text>
+    </view>
+  </view>
+
+  <!-- 搜索 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索工单..." value="{{keyword}}" bindinput="onSearch"/>
+    <text class="search-icon">🔍</text>
+  </view>
+
+  <!-- 工单列表 -->
+  <view wx:if="{{loading}}" class="loading-more">加载中...</view>
+
+  <view wx:elif="{{tickets.length === 0}}" class="empty-state">
+    <text class="icon">📭</text>
+    <text class="text">暂无工单</text>
+  </view>
+
+  <view wx:else class="ticket-list">
+    <view class="card ticket-card" wx:for="{{tickets}}" wx:key="id">
+      <view class="card-click-area" bindtap="goDetail" data-id="{{item.id}}">
+        <view class="ticket-header">
+          <view class="tk-left">
+            <text class="ticket-no">#{{item.ticket_no}}</text>
+            <text class="tag tag-{{item.status}}">{{statusMap[item.status]}}</text>
+            <text wx:if="{{item.priority === 'urgent'}}" class="tag" style="background:rgba(239,68,68,0.15);color:#ef4444">紧急</text>
+          </view>
+          <text class="ticket-time">{{item.created_at}}</text>
+        </view>
+        <text class="ticket-title">{{item.title}}</text>
+        <view class="ticket-meta">
+          <text>👤 {{item.creator_name}}</text>
+          <text wx:if="{{item.handler_name}}">🧑‍💻 {{item.handler_name}}</text>
+          <text>🏷 {{item.category}}</text>
+        </view>
+      </view>
+      
+      <!-- 快速操作 -->
+      <view class="quick-actions">
+        <button wx:if="{{item.status === 'pending'}}" class="btn-primary btn-sm" bindtap="quickClaim" data-id="{{item.id}}">接单</button>
+        <button wx:if="{{item.status === 'processing' && item.handler_id === userId}}" class="btn-success btn-sm" bindtap="goDetail" data-id="{{item.id}}">处理</button>
+      </view>
+    </view>
+  </view>
+</view>

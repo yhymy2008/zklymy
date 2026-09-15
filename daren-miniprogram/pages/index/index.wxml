@@ -1,0 +1,241 @@
+<!-- 工作台：达人的赚钱总控台 -->
+<view class="page">
+
+  <!-- ============ 渐变头部 ============ -->
+  <view class="gh gh-brand">
+    <view class="gh-glow gh-glow-a"></view>
+    <view class="gh-glow gh-glow-b"></view>
+
+    <view class="row between" style="position:relative;z-index:1">
+      <view class="row gap20">
+        <view class="av av-lg av-ring">{{user.initial}}</view>
+        <view class="col">
+          <view class="row gap12">
+            <text class="lg heavy">{{user.name}}</text>
+            <view class="badge badge-gold">{{user.levelName}}</view>
+          </view>
+          <text class="sm mt8" style="color:rgba(255,255,255,.75)">已入驻 {{user.joinedDays}} 天 · 佣金比例 {{user.commissionRate}}</text>
+        </view>
+      </view>
+      <view style="position:relative" bindtap="openNotice">
+        <view class="ic icw-bell" style="width:44rpx;height:44rpx"></view>
+        <view class="dot"></view>
+      </view>
+    </view>
+
+    <view class="row between" style="position:relative;z-index:1;margin-top:44rpx">
+      <view class="col">
+        <text class="sm" style="color:rgba(255,255,255,.72)">今日收益（元）</text>
+        <view class="row gap16" style="align-items:baseline;margin-top:10rpx">
+          <text class="num heavy" style="font-size:76rpx;line-height:1.1">{{overview.todayEarning}}</text>
+          <view class="badge badge-ghost">{{overview.todayDelta}}</view>
+        </view>
+      </view>
+      <view class="btn btn-ghost btn-sm" bindtap="goWallet" hover-class="btn-hover">去提现</view>
+    </view>
+
+    <view class="stats" style="position:relative;z-index:1;margin-top:40rpx">
+      <view class="stat">
+        <text class="stat-n num">{{overview.todayVisitors}}</text>
+        <text class="stat-l">今日访客</text>
+      </view>
+      <view class="vline"></view>
+      <view class="stat">
+        <text class="stat-n num">{{overview.todayCustomers}}</text>
+        <text class="stat-l">新增客户</text>
+      </view>
+      <view class="vline"></view>
+      <view class="stat">
+        <text class="stat-n num">{{overview.todayOrders}}</text>
+        <text class="stat-l">今日订单</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 收益总览 ============ -->
+  <view class="card inset overlap pad">
+    <view class="row between">
+      <view class="col">
+        <text class="sm mut">可提现余额（元）</text>
+        <text class="num heavy mt8" style="font-size:54rpx">{{overview.withdrawable}}</text>
+      </view>
+      <view class="btn btn-primary btn-sm" bindtap="goWallet" hover-class="btn-hover">立即提现</view>
+    </view>
+    <view class="row between mt24" style="padding-top:26rpx;border-top:2rpx solid #EDEFF7">
+      <view class="col flex1">
+        <text class="xs mut">累计收益</text>
+        <text class="num bold md mt8">¥{{overview.totalEarning}}</text>
+      </view>
+      <view class="col flex1">
+        <text class="xs mut">待结算</text>
+        <text class="num bold md mt8">¥{{overview.pending}}</text>
+      </view>
+      <view class="col flex1">
+        <text class="xs mut">本月目标</text>
+        <text class="num bold md mt8">{{overview.growthPercent}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 公告通知 ============ -->
+  <view class="inset mt24">
+    <view class="notice" bindtap="openNotice" hover-class="cell-hover">
+      <view class="ci ci-sm tone-gold">
+        <view class="ic icw-mega" style="width:34rpx;height:34rpx"></view>
+      </view>
+      <view class="flex1 col">
+        <text class="sm t1 el">{{notices[0].title}}</text>
+        <text class="xs mut mt4">{{notices[0].sub}}</text>
+      </view>
+      <view class="ic icg-cr" style="width:32rpx;height:32rpx"></view>
+    </view>
+  </view>
+
+  <!-- ============ 快捷入口 ============ -->
+  <view class="card inset mt24">
+    <view class="qgrid">
+      <view
+        class="qi"
+        wx:for="{{quickEntries}}"
+        wx:key="key"
+        data-item="{{item}}"
+        bindtap="onEntry"
+        hover-class="qi-hover"
+      >
+        <view class="qi-ic tone-{{item.tone}}">
+          <view class="ic icw-{{item.icon}}" style="width:46rpx;height:46rpx"></view>
+        </view>
+        <text class="qi-t">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 成长进度 ============ -->
+  <view class="pad-h mt24">
+    <view class="card pad">
+      <view class="row between">
+        <view class="col">
+          <text class="md bold">成长进度</text>
+          <text class="xs mut mt8">距 {{user.nextLevel}} {{user.nextLevelName}} 还差 {{overview.growthRemain}} 成长值</text>
+        </view>
+        <view class="badge badge-violet">{{user.level}} → {{user.nextLevel}}</view>
+      </view>
+      <view class="bar mt20">
+        <view class="bar-i" style="width:{{overview.growthPercent}}%"></view>
+      </view>
+      <view class="row between mt12">
+        <text class="xs mut">{{overview.growthCurrent}} / {{overview.growthTarget}}</text>
+        <text class="xs bold" style="color:#6D5DFC">升级后佣金 {{user.nextRate}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ============ 今日任务 ============ -->
+  <view class="sect">
+    <text class="sect-t">今日任务</text>
+    <view class="sect-m" bindtap="goContent" hover-class="qi-hover">
+      <text>全部任务</text>
+      <view class="ic ic-cr" style="width:28rpx;height:28rpx"></view>
+    </view>
+  </view>
+  <view class="card inset">
+    <block wx:for="{{dailyTasks}}" wx:key="id">
+      <view class="cell {{index < dailyTasks.length - 1 ? 'line' : ''}}" hover-class="cell-hover">
+        <view class="ci tone-{{item.state === 'done' ? 'green' : 'violet'}}">
+          <view class="ic icw-{{item.icon}}" style="width:38rpx;height:38rpx"></view>
+        </view>
+        <view class="ct">
+          <text class="ct-t">{{item.title}}</text>
+          <text class="ct-s">{{item.sub}}</text>
+        </view>
+        <view wx:if="{{item.state === 'done'}}" class="badge badge-green">已完成</view>
+        <view wx:else class="btn btn-primary btn-xs" bindtap="goContent" hover-class="btn-hover">去完成</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- ============ 热门素材 ============ -->
+  <view class="sect">
+    <text class="sect-t">热门素材</text>
+    <view class="sect-m" bindtap="goContent" hover-class="qi-hover">
+      <text>内容中心</text>
+      <view class="ic ic-cr" style="width:28rpx;height:28rpx"></view>
+    </view>
+  </view>
+  <scroll-view scroll-x class="hscroll" show-scrollbar="{{false}}">
+    <view class="hscroll-in">
+      <view
+        class="hcard"
+        wx:for="{{hotAssets}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="goAsset"
+        hover-class="qi-hover"
+      >
+        <view class="card">
+          <view class="cov {{item.cover}}" style="width:100%;height:220rpx;border-radius:32rpx 32rpx 0 0;margin-right:0">
+            <text class="cov-txt">{{item.title}}</text>
+            <view class="cov-bar">{{item.type}} · {{item.rate}} 转化</view>
+          </view>
+          <view class="pad">
+            <text class="sm bold el2" style="line-height:1.5">{{item.title}}</text>
+            <view class="row between mt16">
+              <view class="row gap16">
+                <view class="metric">
+                  <view class="ic icg-eye" style="width:26rpx;height:26rpx"></view>
+                  <text>{{item.views}}</text>
+                </view>
+                <view class="metric">
+                  <view class="ic icg-share" style="width:26rpx;height:26rpx"></view>
+                  <text>{{item.shares}}</text>
+                </view>
+              </view>
+              <text class="xs bold" style="color:#FF8A00">{{item.rate}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- ============ 邀请达人 ============ -->
+  <view class="inset mt24">
+    <view class="note note-v row between">
+      <view class="row gap16 flex1">
+        <view class="ci ci-sm tone-violet">
+          <view class="ic icw-users" style="width:34rpx;height:34rpx"></view>
+        </view>
+        <view class="flex1 col">
+          <text class="sm bold">邀请达人入伙，拿团队分佣</text>
+          <text class="xs mut mt4">成功邀请 1 人奖励 ¥50，永久享受团队分佣</text>
+        </view>
+      </view>
+      <view class="btn btn-primary btn-xs" bindtap="goQr" hover-class="btn-hover">去邀请</view>
+    </view>
+  </view>
+
+  <view style="height:48rpx"></view>
+
+  <!-- ============ 消息通知抽屉 ============ -->
+  <view class="mask" wx:if="{{noticeOpen}}" bindtap="closeNotice"></view>
+  <view class="sheet" wx:if="{{noticeOpen}}">
+    <view class="sheet-hd">
+      <text class="sheet-t">消息通知</text>
+      <view class="pill" bindtap="closeNotice" hover-class="cell-hover">收起</view>
+    </view>
+    <scroll-view scroll-y style="max-height:660rpx">
+      <view class="cell" style="padding-left:0;padding-right:0" wx:for="{{notices}}" wx:key="id">
+        <view class="ci tone-{{item.type === 'earning' ? 'gold' : item.type === 'team' ? 'green' : 'violet'}}">
+          <view class="ic icw-{{item.icon}}" style="width:38rpx;height:38rpx"></view>
+        </view>
+        <view class="ct">
+          <text class="ct-t">{{item.title}}</text>
+          <text class="ct-s">{{item.sub}}</text>
+        </view>
+        <text class="xs mut">{{item.time}}</text>
+      </view>
+    </scroll-view>
+    <view class="divider mt20"></view>
+    <view class="btn btn-gray btn-block mt20" bindtap="closeNotice">全部已读</view>
+  </view>
+</view>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6D5DFC">
+<meta name="format-detection" content="telephone=no">
+<title>我的 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-immersive page-tab">
+  <div id="nav"></div>
+
+  <div class="gh gh-brand">
+    <i class="gh-glow gh-glow-a"></i>
+    <i class="gh-glow gh-glow-b"></i>
+
+    <div class="row gap12" style="position:relative">
+      <div class="av av-lg av-ring">雨</div>
+      <div class="flex1">
+        <div class="row gap6">
+          <span class="lg heavy">王小雨</span>
+          <span class="badge badge-gold">Lv.4 黄金分销官</span>
+        </div>
+        <div class="xs mt4" style="opacity:.82">ID 8823 · 佣金比例 25%</div>
+      </div>
+      <span class="btn btn-ghost btn-xs" onclick="APP.go('settings.html')">编辑资料</span>
+    </div>
+
+    <div class="mt20" style="position:relative">
+      <div class="row between xs" style="opacity:.85">
+        <span>成长值 2,860 / 3,000</span>
+        <span>距 Lv.5 钻石分销官还差 1,860</span>
+      </div>
+      <div class="bar mt8" style="background:rgba(255,255,255,.24)">
+        <i class="bar-i bar-gold" id="mine-bar" style="width:0"></i>
+      </div>
+    </div>
+
+    <div class="stats mt20" style="position:relative">
+      <div class="stat" onclick="APP.go('wallet.html')"><div class="stat-n num" style="font-size:16px">42,860</div><div class="stat-l">累计收益</div></div>
+      <i class="vline"></i>
+      <div class="stat" onclick="APP.go('team.html')"><div class="stat-n num" style="font-size:16px">28</div><div class="stat-l">我的团队</div></div>
+      <i class="vline"></i>
+      <div class="stat" onclick="APP.go('team.html')"><div class="stat-n num" style="font-size:16px">86</div><div class="stat-l">我的客户</div></div>
+    </div>
+  </div>
+
+  <!-- 核心入口 -->
+  <div class="card inset overlap" style="padding:6px 4px">
+    <div class="qgrid" id="tools"></div>
+  </div>
+
+  <!-- 经营 -->
+  <div class="sect">
+    <span class="sect-t">我的经营</span>
+  </div>
+  <div class="card inset" id="biz"></div>
+
+  <!-- 服务 -->
+  <div class="sect">
+    <span class="sect-t">服务与安全</span>
+  </div>
+  <div class="card inset" id="service"></div>
+
+  <!-- 客服 -->
+  <div class="inset mt16">
+    <div class="card pad row between" id="help">
+      <div class="row gap8">
+        <i class="ic ic-help" style="width:18px;height:18px"></i>
+        <div>
+          <div class="md bold">专属客服</div>
+          <div class="xs mut mt4">09:00 – 21:00 · 平均 30 秒响应</div>
+        </div>
+      </div>
+      <span class="badge badge-violet">在线</span>
+    </div>
+  </div>
+
+  <div class="empty" style="padding:28px 0 8px">达人中心 H5 v1.0.0 · 演示数据</div>
+  <div class="tc mb20"><span class="pill" id="logout">退出登录</span></div>
+</div>
+
+<div id="tab"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+
+  APP.nav({ title: '我的', theme: 'brand', right: 'bell' })
+  APP.tab('mine')
+
+  document.getElementById('tools').innerHTML = D.mineTools.map(function (t) {
+    return '<div class="qi" data-key="' + t.key + '">' +
+      '<div class="qi-ic tone-' + t.tone + '"><i class="ic icw-' + t.icon + '" style="width:21px;height:21px"></i></div>' +
+      '<div class="qi-t">' + t.title + '</div></div>'
+  }).join('')
+  document.querySelectorAll('#tools .qi').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var t = D.mineTools.filter(function (x) { return x.key === el.dataset.key })[0]
+      if (t.url) return APP.go(t.url)
+      if (t.copy === 'link') return APP.copy(APP.link('index.html'), '推广链接已复制')
+      APP.toast('功能建设中')
+    })
+  })
+
+  setTimeout(function () {
+    document.getElementById('mine-bar').style.width = D.overview.growthPercent + '%'
+  }, 120)
+
+  function renderCells(host, items) {
+    host.innerHTML = items.map(APP.cell).join('')
+    APP.bindList(host, items)
+  }
+
+  renderCells(document.getElementById('biz'), D.mineBiz)
+  renderCells(document.getElementById('service'), D.mineService)
+
+  document.getElementById('help').addEventListener('click', function () {
+    APP.toast('客服会话建设中')
+  })
+  document.getElementById('logout').addEventListener('click', function () {
+    APP.toast('演示环境不执行退出')
+  })
+})()
+</script>
+</body>
+</html>

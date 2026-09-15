@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="format-detection" content="telephone=no">
+<title>佣金明细 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page">
+  <div id="nav"></div>
+
+  <!-- 汇总 -->
+  <div class="gh gh-brand" style="padding-top:16px;border-radius:0 0 20px 20px">
+    <i class="gh-glow gh-glow-a"></i>
+    <div style="position:relative">
+      <div class="sm" style="opacity:.8">本月佣金（元）</div>
+      <div class="num" style="font-size:32px;font-weight:700;line-height:1.2">6,842.30</div>
+      <div class="xs mt4" style="opacity:.78">共 286 笔 · 环比 +18.6%</div>
+    </div>
+    <div class="stats mt20" style="position:relative">
+      <div class="stat"><div class="stat-n num" style="font-size:16px">5,980</div><div class="stat-l">已结算</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num" style="font-size:16px">862</div><div class="stat-l">待结算</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num" style="font-size:16px">38</div><div class="stat-l">已扣回</div></div>
+    </div>
+  </div>
+
+  <!-- 筛选 -->
+  <div class="chips mt16">
+    <div class="chips-in" id="chips"></div>
+  </div>
+
+  <!-- 明细列表 -->
+  <div class="sect">
+    <span class="sect-t">佣金流水</span>
+    <span class="sect-m" id="count">共 4 笔</span>
+  </div>
+  <div class="card inset" id="list"></div>
+
+  <div class="inset mt16 mb20">
+    <div class="card pad">
+      <div class="md bold">结算规则</div>
+      <div class="divider mt12"></div>
+      <div class="kv"><span class="sm t2">结算时点</span><span class="sm t1">确认收货后 7 天</span></div>
+      <div class="kv" style="padding-top:0"><span class="sm t2">到账时点</span><span class="sm t1">结算后 T+1</span></div>
+      <div class="kv" style="padding-top:0"><span class="sm t2">退款处理</span><span class="sm t1">自动扣回对应佣金</span></div>
+      <div class="kv" style="padding-top:0"><span class="sm t2">追溯依据</span><span class="sm t1">订单号 + 客户绑定关系</span></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+  var filters = ['全部', '已结算', '待结算', '已扣回']
+  var active = '全部'
+
+  APP.nav({ title: '佣金明细', back: true })
+
+  function renderChips() {
+    document.getElementById('chips').innerHTML = filters.map(function (f) {
+      return '<span class="chip' + (f === active ? ' chip-on' : '') + '" data-f="' + f + '">' + f + '</span>'
+    }).join('')
+    document.querySelectorAll('#chips .chip').forEach(function (el) {
+      el.addEventListener('click', function () {
+        active = el.dataset.f
+        renderChips()
+        renderList()
+      })
+    })
+  }
+
+  function renderList() {
+    var list = active === '全部' ? D.bills : D.bills.filter(function (b) { return b.state === active })
+    var host = document.getElementById('list')
+    document.getElementById('count').textContent = '共 ' + list.length + ' 笔'
+
+    if (!list.length) {
+      host.innerHTML = '<div class="empty"><div class="empty-ic"><i class="ic icg-coins" style="width:22px;height:22px"></i></div>该状态下暂无流水</div>'
+      return
+    }
+
+    host.innerHTML = list.map(function (b) {
+      return '<div class="cell line">' +
+        '<div class="ci tone-' + (b.negative ? 'gray' : 'gold') + '"><i class="ic icw-' + b.icon + '" style="width:19px;height:19px"></i></div>' +
+        '<div class="ct">' +
+        '<div class="ct-t el">' + b.product + '</div>' +
+        '<div class="ct-s">' + b.from + ' · ' + b.time + '</div>' +
+        '<div class="ct-s" style="opacity:.75">单号 ' + b.no + '</div>' +
+        '</div>' +
+        '<div class="cr col" style="align-items:flex-end;gap:4px">' +
+        '<span class="md heavy num ' + (b.negative ? 'mut' : 'gold') + '">' + b.amount + '</span>' +
+        '<span class="badge badge-' + b.stateType + '">' + b.state + '</span>' +
+        '</div></div>'
+    }).join('')
+  }
+
+  renderChips()
+  renderList()
+})()
+</script>
+</body>
+</html>

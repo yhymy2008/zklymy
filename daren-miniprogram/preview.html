@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分销达人中心 · 微信小程序 UI 设计</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#6D5DFC; --brand-2:#9B8AFF; --brand-3:#4F46E5;
+  --gold:#FFB020; --gold-2:#FF8A00;
+  --green:#12B76A; --red:#F04438; --blue:#2E90FA;
+  --bg:#F4F5FA;
+  --ink-1:#151833; --ink-2:#5B6178; --ink-3:#949AB2;
+  --line:#EDEFF7;
+  --sh-1:0 1px 2px rgba(21,24,51,.04), 0 4px 14px rgba(21,24,51,.05);
+  --sh-2:0 10px 30px rgba(21,24,51,.10);
+  --sh-b:0 10px 24px rgba(109,93,252,.30);
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:#F1F2F7;color:#12152E;-webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:1400px;margin:0 auto;padding:0 28px 96px}
+
+.hero{margin:0 -28px 44px;padding:60px 28px 52px;color:#fff;overflow:hidden;
+  background:radial-gradient(860px 400px at 10% -12%,rgba(155,138,255,.40),transparent 62%),
+             radial-gradient(680px 360px at 90% 8%,rgba(7,193,96,.20),transparent 60%),
+             linear-gradient(160deg,#171A33 0%,#242848 55%,#2C2455 100%)}
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);font-size:12.5px;letter-spacing:.06em}
+.hero h1{font-size:42px;line-height:1.18;letter-spacing:-.02em;margin-top:20px;font-weight:700}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,#FFD27A,#FFB020 45%,#9B8AFF);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin-top:16px;max-width:680px;color:#C3C7E4;font-size:15.5px}
+.hero-rows{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.hero-row{display:flex;align-items:center;gap:9px;padding:8px 14px;border-radius:12px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);font-size:13px;color:#D8DAEE}
+.hero-row svg{color:var(--brand-2)}
+
+.sec{margin-top:52px}
+.sec-n{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--brand)}
+.sec-h h2{font-size:26px;letter-spacing:-.01em;font-weight:700;margin-top:6px}
+.sec-h p{color:var(--ink-2);font-size:14px;margin-top:5px}
+.sec-h{margin-bottom:22px}
+
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.spec{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--sh-1)}
+.spec h4{display:flex;align-items:center;gap:9px;font-size:14.5px;margin-bottom:10px}
+.spec h4 span{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#F0EDFF;color:var(--brand)}
+.spec p{font-size:12.8px;color:var(--ink-2);line-height:1.7}
+.spec b{color:var(--ink-1)}
+.spec .kv{display:flex;justify-content:space-between;padding:6px 0;font-size:12.3px;color:var(--ink-2);border-bottom:1px dashed var(--line)}
+.spec .kv:last-child{border:0}
+.spec .kv b{font-weight:600;color:var(--ink-1);font-variant-numeric:tabular-nums}
+
+.stage{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:42px;align-items:start}
+@media(max-width:1040px){.stage{grid-template-columns:1fr}}
+.phone{width:375px;height:812px;position:relative;border-radius:50px;
+  background:linear-gradient(150deg,#1B1E33,#0C0E1C);padding:10px;
+  box-shadow:0 40px 80px -20px rgba(21,24,51,.45),0 0 0 1px rgba(255,255,255,.06) inset}
+.phone.sticky{position:sticky;top:24px;margin:0 auto}
+.screen{position:relative;width:100%;height:100%;border-radius:41px;overflow:hidden;background:var(--bg);font-size:14px;color:var(--ink-1)}
+.screen::after{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:112px;height:25px;
+  background:#0B0D18;border-radius:0 0 17px 17px;z-index:400;pointer-events:none}
+.side{padding-top:6px}
+.side h3{font-size:20px;margin-bottom:6px}
+.side .lead{color:var(--ink-2);font-size:14px;margin-bottom:20px}
+.pgnav{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px}
+.pgbtn{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:13px;border:1px solid var(--line);
+  background:#fff;font-size:12.8px;font-weight:500;cursor:pointer;text-align:left;transition:.2s;color:var(--ink-1);font-family:inherit}
+.pgbtn:hover{border-color:var(--brand-2);background:#FAF9FF;transform:translateY(-1px)}
+.pgbtn.on{border-color:var(--brand);background:#F2EFFF;color:var(--brand-3);font-weight:600}
+.pgbtn svg{color:var(--brand);flex:none}
+.hintbar{margin-top:18px;padding:14px 16px;border-radius:14px;background:#FFF8EA;border:1px solid #FFE6B8;
+  font-size:12.8px;color:#8A5B00;display:flex;gap:10px;line-height:1.6}
+
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:28px;justify-items:center}
+.ov{width:252px;text-align:center}
+.ov-frame{width:252px;height:545px;border-radius:32px;background:linear-gradient(150deg,#1B1E33,#0C0E1C);padding:8px;
+  box-shadow:0 22px 44px -14px rgba(21,24,51,.4)}
+.ov-in{position:relative;width:100%;height:100%;border-radius:25px;overflow:hidden;background:var(--bg)}
+.ov-in .page{position:absolute;inset:0}
+.ov-cap{margin-top:13px}
+.ov-cap b{display:block;font-size:14px}
+.ov-cap span{display:block;font-size:12px;color:var(--ink-3);margin-top:3px}
+
+/* ===== 小程序页面栈 ===== */
+.page{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);
+  transform:translateX(100%);visibility:hidden;transition:transform .32s cubic-bezier(.32,.72,.24,1),visibility .32s}
+.page.on{transform:none;visibility:visible;transition:transform .32s cubic-bezier(.32,.72,.24,1),visibility 0s}
+.sc{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.sc::-webkit-scrollbar{width:0;height:0}
+
+/* 状态栏 */
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:16px 22px 0;
+  font-size:14px;font-weight:600;z-index:60}
+.sb.dk{color:#fff}
+.sb-r{display:flex;align-items:center;gap:4px}
+
+/* 小程序导航栏 44px + 胶囊 */
+.nav{flex:none;height:44px;position:relative;display:flex;align-items:center;justify-content:center;background:#fff}
+.nav .t{font-size:17px;font-weight:600;letter-spacing:.01em}
+.nav.dk{background:#6D5DFC;color:#fff}
+.nav.dk .cap{border-color:rgba(255,255,255,.28);background:rgba(0,0,0,.16)}
+.nav.dk .cap i,.nav.dk .cap em{background:#fff}
+.nav.dk .cap .ring{border-color:#fff}
+.cap{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:87px;height:32px;border-radius:16px;
+  border:1px solid rgba(0,0,0,.08);background:rgba(247,247,247,.9);display:flex;align-items:center;cursor:pointer}
+.cap .h{flex:1;display:grid;place-items:center;height:100%}
+.cap .mo{display:flex;gap:2.5px}
+.cap .mo i{width:3.5px;height:3.5px;border-radius:50%;background:#1A1A1A;display:block}
+.cap .ring{width:16px;height:16px;border-radius:50%;border:1.4px solid #1A1A1A;position:relative}
+.cap .ring::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:4.5px;height:4.5px;border-radius:50%;background:#1A1A1A}
+.cap .dv{width:1px;height:18px;background:rgba(0,0,0,.12)}
+.back{position:absolute;left:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;
+  display:grid;place-items:center;cursor:pointer;color:inherit}
+
+/* 小程序 tabBar */
+.mtb{flex:none;background:#fff;border-top:1px solid rgba(0,0,0,.06);display:flex;padding-top:5px;height:50px;z-index:90}
+.mtb .i{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:#7A7E8C}
+.mtb .i.on{color:var(--brand)}
+.mtb .i b{font-size:10px;font-weight:500}
+.mtb .i.on b{font-weight:600}
+.safe{height:22px;flex:none;background:#fff;display:grid;place-items:center}
+.safe i{width:134px;height:5px;border-radius:9px;background:#151833;display:block}
+
+.c{background:#fff;border-radius:20px;box-shadow:var(--sh-1);overflow:hidden}
+.pad{padding:14px 16px}
+.sec-t{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 11px}
+.sec-t h4{font-size:15.5px;font-weight:650}
+.sec-t a{font-size:12.5px;color:var(--ink-3);text-decoration:none}
+.row{display:flex;align-items:center}
+.between{justify-content:space-between}
+.gap6{gap:6px}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}.gap14{gap:14px}
+.mt8{margin-top:8px}.mt10{margin-top:10px}.mt12{margin-top:12px}.mt14{margin-top:14px}
+.mut{color:var(--ink-3)}
+.sm{font-size:12px}.xs{font-size:11.5px}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.el{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc{text-align:center}
+
+.gh{position:relative;padding:16px 16px 20px;color:#fff;overflow:hidden;
+  background:radial-gradient(300px 200px at 88% 6%,rgba(255,210,122,.32),transparent 62%),
+             linear-gradient(140deg,#5847E8 0%,#6D5DFC 45%,#8E7BFF 100%)}
+.gh::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 22px)}
+.gh>*{position:relative}
+
+.av{border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;flex:none;
+  background:linear-gradient(135deg,#C7BCFF,#8E7BFF);box-shadow:0 0 0 2px rgba(255,255,255,.6)}
+.av.sm{width:34px;height:34px;font-size:13px}
+.av.md{width:46px;height:46px;font-size:16px}
+.av.lg{width:58px;height:58px;font-size:20px}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3.5px 9px;border-radius:999px;font-size:11px;font-weight:600}
+.badge.gold{background:linear-gradient(100deg,#FFE9A8,#FFC64E);color:#6B3F00}
+.badge.violet{background:#EFEBFF;color:#5B48E0}
+.badge.ghost{background:rgba(255,255,255,.20);color:#fff}
+.badge.green{background:#E6F7EF;color:#087443}
+.badge.orange{background:#FFF3E2;color:#B54708}
+.badge.gray{background:#F2F3F7;color:var(--ink-2)}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11px;
+  background:#F4F5FA;color:var(--ink-2);font-weight:500}
+
+.btn{border:0;font-family:inherit;cursor:pointer;border-radius:12px;font-size:14px;font-weight:600;
+  padding:11px 16px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.18s}
+.btn:active{transform:scale(.97)}
+.btn-p{background:linear-gradient(135deg,#6D5DFC,#8E7BFF);color:#fff;box-shadow:var(--sh-b)}
+.btn-gold{background:linear-gradient(135deg,#FFB020,#FF8A00);color:#fff;box-shadow:0 8px 20px rgba(255,138,0,.3)}
+.btn-rim{background:#fff;color:var(--brand-3);border:1px solid #E3DEFF}
+.btn-gh{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.28)}
+.btn-gray{background:#F2F3F7;color:var(--ink-2)}
+.btn.sm{padding:7px 13px;font-size:12.5px;border-radius:10px}
+
+.cell{display:flex;align-items:center;gap:12px;padding:13px 15px;background:#fff;cursor:pointer}
+.cell+.cell{border-top:1px solid var(--line)}
+.cell:active{background:#F8F9FC}
+.cell .ci{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+.cell .ct{flex:1;min-width:0}
+.cell .ct b{display:block;font-size:14.5px;font-weight:550}
+.cell .ct span{display:block;font-size:12px;color:var(--ink-3);margin-top:2px}
+.cell .cr{display:flex;align-items:center;gap:6px;color:var(--ink-3);flex:none}
+
+.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 4px}
+.qi{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer}
+.qi i{width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
+.qi b{font-size:11.5px;font-weight:500;color:var(--ink-2)}
+
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:6.5px 13px;border-radius:999px;background:#fff;border:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+
+.sbox{display:flex;align-items:center;gap:8px;background:#F2F3F7;border-radius:12px;padding:9px 12px;color:var(--ink-3)}
+.sbox input{border:0;background:none;outline:none;font-size:13.5px;flex:1;font-family:inherit;color:var(--ink-1)}
+
+.asset{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--sh-1)}
+.cov{position:relative;height:128px;display:flex;align-items:flex-end;padding:12px;color:#fff;overflow:hidden}
+.cov::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 3px,transparent 3px 12px)}
+.cov{position:relative}
+.cv1{background:linear-gradient(135deg,#6D5DFC,#9B8AFF)}
+.cv2{background:linear-gradient(135deg,#FF8A00,#FFC64E)}
+.cv3{background:linear-gradient(135deg,#0E7FD6,#22D3EE)}
+.cv4{background:linear-gradient(135deg,#E5484D,#FB7185)}
+.cv5{background:linear-gradient(135deg,#0B8158,#34D399)}
+.cv6{background:linear-gradient(135deg,#8E4EC6,#D6409F)}
+.acts{display:flex;gap:8px;padding:0 12px 12px}
+.act{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:11px;
+  background:#F6F7FB;color:var(--ink-2);font-size:11px;cursor:pointer;border:0;font-family:inherit}
+.act.pri{background:#F2EFFF;color:var(--brand-3);font-weight:600}
+
+.qrbox{width:184px;height:184px;border-radius:16px;background:#fff;padding:12px;position:relative;
+  box-shadow:0 6px 18px rgba(21,24,51,.08)}
+.qr-art{width:100%;height:100%;border-radius:6px;background:repeating-conic-gradient(from 0deg,#151833 0% 25%,#fff 0% 50%) 0 0/22px 22px}
+.qr-logo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:12px;
+  background:#fff;box-shadow:0 0 0 4px #fff;display:grid;place-items:center;color:var(--brand)}
+
+.bar{height:8px;border-radius:99px;background:#EEF0F7;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#FFB020,#FF8A00)}
+.bar.v i{background:linear-gradient(90deg,#6D5DFC,#9B8AFF)}
+.donut{width:100px;height:100px;border-radius:50%;position:relative;
+  background:conic-gradient(#6D5DFC 0 42%,#FFB020 42% 80%,#12B76A 80% 100%)}
+.donut::after{content:"";position:absolute;inset:18px;background:#fff;border-radius:50%}
+.mini{display:flex;align-items:flex-end;gap:9px;height:70px}
+.mini div{flex:1;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#B7AEFF,#6D5DFC);position:relative}
+.mini div.hl{background:linear-gradient(180deg,#FFD27A,#FF8A00)}
+.mini div::after{content:attr(data-l);position:absolute;bottom:-19px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--ink-3)}
+
+/* 半屏弹窗（小程序常见） */
+.mask{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:300;opacity:0;visibility:hidden;transition:.26s}
+.mask.on{opacity:1;visibility:visible}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:310;background:#F4F5FA;border-radius:20px 20px 0 0;
+  transform:translateY(103%);transition:transform .34s cubic-bezier(.32,.72,.24,1);padding:6px 0 18px;max-height:80%}
+.sheet.on{transform:none}
+.handle{width:36px;height:4px;border-radius:9px;background:#D7DAE8;margin:6px auto 10px}
+.chan{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 6px}
+.chi{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer}
+.chi i{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;color:#fff}
+.chi b{font-size:11.5px;font-weight:500;color:var(--ink-2)}
+.chi.g b{color:var(--ink-3)}
+.chi.g i{background:#fff;color:var(--brand);box-shadow:0 0 0 1px var(--line)}
+
+/* 小程序原生 Toast */
+.wxtoast{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.94);z-index:500;
+  width:150px;padding:22px 16px;border-radius:12px;background:rgba(0,0,0,.78);color:#fff;
+  display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;visibility:hidden;transition:.2s}
+.wxtoast.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+.wxtoast span{font-size:14px}
+
+.note{background:#FFF8EA;border:1px solid #FFE6B8;border-radius:14px;padding:11px 13px;font-size:11.8px;color:#8A5B00;line-height:1.65}
+.note.v{background:#F4F2FF;border-color:#E4DEFF;color:#4B3BAE}
+.poster{width:100%;aspect-ratio:3/4;border-radius:14px;overflow:hidden;position:relative;color:#fff;
+  background:radial-gradient(300px 300px at 80% 10%,rgba(255,255,255,.24),transparent 60%),
+             linear-gradient(160deg,#4C3FE0,#8E7BFF 60%,#C46BD1)}
+.hscroll{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.footer-note{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--ink-3);font-size:12.5px}
+svg{display:block}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M18 17h3v3"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V5a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h14a1 1 0 0 1 1 1v3h-3a2 2 0 0 0 0 4h3v5a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V6"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></symbol>
+<symbol id="i-cr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></symbol>
+<symbol id="i-cl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51L8.59 10.49"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></symbol>
+<symbol id="i-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18M4 18l2.2-9 4.3 4.6L12 6l1.5 7.6L18 9l2 9"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.36.44.65.81.78H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+<symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></symbol>
+<symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7l-9.5 9.5-4.5-4.5L2 18"/><path d="M16 7h6v6"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.5"/><path d="M18.1 10.4A5.5 5.5 0 1 1 10.3 18"/><path d="M7 5.5V9M5.2 7.2H8.8M15.9 13.2l.7.7-2.8 2.8"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.4 15.4L17 22l-5-3-5 3 1.6-6.6"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 11 14 10 22 21 10 13 10 13 2"/></symbol>
+<symbol id="i-mega" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.1 8.6 22 9.6 17 14.6 18.2 21.5 12 18.2 5.8 21.5 7 14.6 2 9.6 8.9 8.6 12 2"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+</svg>
+
+<template id="t-sb">
+  <div class="sb"><span>9:41</span>
+    <div class="sb-r">
+      <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+      <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 3.6a10 10 0 0 1 14 0"/><path d="M3.6 6.4a6.4 6.4 0 0 1 8.8 0"/><path d="M6.2 9a2.8 2.8 0 0 1 3.6 0"/></svg>
+      <svg width="24" height="12" viewBox="0 0 24 12"><rect x="0.6" y="0.6" width="19" height="10.8" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4" stroke-width="1.2"/><rect x="2.2" y="2.2" width="14" height="7.6" rx="2" fill="currentColor"/><path d="M21.5 4.2v3.6c1-.3 1.5-.9 1.5-1.8s-.5-1.5-1.5-1.8z" fill="currentColor" fill-opacity=".45"/></svg>
+    </div>
+  </div>
+</template>
+
+<template id="t-nav">
+  <div class="nav">
+    <div class="back" data-back hidden><svg width="22" height="22"><use href="#i-cl"/></svg></div>
+    <div class="t"></div>
+    <div class="cap">
+      <div class="h" data-toast="打开更多菜单"><div class="mo"><i></i><i></i><i></i></div></div>
+      <div class="dv"></div>
+      <div class="h" data-toast="关闭小程序"><div class="ring"></div></div>
+    </div>
+  </div>
+</template>
+
+<template id="t-tab">
+  <div>
+    <div class="mtb">
+      <div class="i" data-tab="index"><svg width="23" height="23"><use href="#i-home"/></svg><b>工作台</b></div>
+      <div class="i" data-tab="content"><svg width="23" height="23"><use href="#i-grid"/></svg><b>内容中心</b></div>
+      <div class="i" data-tab="qr"><svg width="23" height="23"><use href="#i-qr"/></svg><b>推广</b></div>
+      <div class="i" data-tab="wallet"><svg width="23" height="23"><use href="#i-wallet"/></svg><b>收益</b></div>
+      <div class="i" data-tab="mine"><svg width="23" height="23"><use href="#i-user"/></svg><b>我的</b></div>
+    </div>
+    <div class="safe"><i></i></div>
+  </div>
+</template>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="hero-kicker"><svg width="14" height="14"><use href="#i-crown"/></svg> WECHAT MINI PROGRAM · UI SPEC</span>
+    <h1>分销达人中心<em>小程序版</em><br>遵循微信原生规范的界面设计</h1>
+    <p>在 H5 方案基础上，按微信小程序的设计与能力约束重做：原生导航栏 + 胶囊按钮、原生 tabBar、rpx 栅格、半屏弹窗、原生 Toast，并把「分销码」与「内容中心」两大核心能力落到小程序可实现的交互上。</p>
+    <div class="hero-rows">
+      <span class="hero-row"><svg width="14" height="14"><use href="#i-qr"/></svg> 小程序码 + 分销参数 scene</span>
+      <span class="hero-row"><svg width="14" height="14"><use href="#i-share"/></svg> button open-type="share" 转发</span>
+      <span class="hero-row"><svg width="14" height="14"><use href="#i-coins"/></svg> 佣金实时可见 · T+1 提现</span>
+      <span class="hero-row"><svg width="14" height="14"><use href="#i-award"/></svg> 等级权益驱动持续生产</span>
+    </div>
+  </header>
+
+  <!-- 01 小程序规范 -->
+  <section class="sec">
+    <div class="sec-h">
+      <div class="sec-n">01 / MINI PROGRAM SPEC</div>
+      <h2>小程序界面规范与适配要点</h2>
+      <p>小程序与 H5 的关键差异集中在导航栏、胶囊按钮、tabBar 与安全区。以下尺寸单位已按 750rpx = 375pt 换算。</p>
+    </div>
+    <div class="spec-grid">
+      <div class="spec">
+        <h4><span><svg width="15" height="15"><use href="#i-grid"/></svg></span>导航栏与胶囊</h4>
+        <div class="kv"><span>导航栏高度</span><b>44pt / 88rpx</b></div>
+        <div class="kv"><span>状态栏高度</span><b>44pt（刘海屏）</b></div>
+        <div class="kv"><span>胶囊按钮</span><b>87 × 32pt</b></div>
+        <div class="kv"><span>胶囊右边距</span><b>7pt</b></div>
+        <p style="margin-top:10px">胶囊区域为系统占位，<b>标题居中需预留左右各 95pt</b>，避免与胶囊重叠。深色导航栏用 <b>navigationBarTextStyle: white</b>。</p>
+      </div>
+      <div class="spec">
+        <h4><span><svg width="15" height="15"><use href="#i-home"/></svg></span>tabBar 与安全区</h4>
+        <div class="kv"><span>tabBar 高度</span><b>50pt / 100rpx</b></div>
+        <div class="kv"><span>底部安全区</span><b>+34pt</b></div>
+        <div class="kv"><span>图标尺寸</span><b>81 × 81rpx</b></div>
+        <div class="kv"><span>最多 Tab 数</span><b>5 个</b></div>
+        <p style="margin-top:10px">原生 tabBar <b>不支持凸起中心按钮</b>；若要做「推广」凸起按钮，需改用 <b>custom-tab-bar</b> 自定义组件（本方案用原生平铺 5 Tab，选中态品牌紫）。</p>
+      </div>
+      <div class="spec">
+        <h4><span><svg width="15" height="15"><use href="#i-share"/></svg></span>转发与分享能力</h4>
+        <div class="kv"><span>转发给好友/群</span><b>onShareAppMessage</b></div>
+        <div class="kv"><span>分享到朋友圈</span><b>onShareTimeline</b></div>
+        <div class="kv"><span>按钮触发</span><b>open-type="share"</b></div>
+        <div class="kv"><span>携带参数</span><b>path + query</b></div>
+        <p style="margin-top:10px">素材转发走<b>自定义半屏面板</b>：好友/群用原生转发，朋友圈用 <b>canvas 生成海报 + 保存相册</b>，文案用 <b>setClipboardData</b>。</p>
+      </div>
+      <div class="spec">
+        <h4><span><svg width="15" height="15"><use href="#i-target"/></svg></span>交互与性能约束</h4>
+        <div class="kv"><span>页面栈上限</span><b>10 层</b></div>
+        <div class="kv"><span>设计基准</span><b>750rpx 栅格</b></div>
+        <div class="kv"><span>触控热区</span><b>≥ 44pt</b></div>
+        <div class="kv"><span>setData 单次</span><b>≤ 256KB</b></div>
+        <p style="margin-top:10px">长列表用 <b>recycle-view / 分页加载</b>；海报生成放 <b>canvas 2d</b> 并加 loading；二维码用服务端下发图片，避免前端生成。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 交互原型 -->
+  <section class="sec">
+    <div class="sec-h">
+      <div class="sec-n">02 / INTERACTIVE PROTOTYPE</div>
+      <h2>小程序交互原型（可点击）</h2>
+      <p>左侧为带微信原生外壳的手机原型：切换 tabBar、点卡片进子页面、点导航栏返回键回退；在内容中心唤起「转发」半屏面板。</p>
+    </div>
+
+    <div class="stage">
+      <div class="phone sticky">
+        <div class="screen" id="screen">
+          <!-- ============ 工作台（tabBar） ============ -->
+          <div class="page" id="p-index" data-root data-nav="工作台" data-dark="1" data-title="工作台" data-desc="数据总览与每日任务" data-icon="i-home">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div class="gh" style="background:linear-gradient(180deg,#6D5DFC 0%,#8259FC 60%,#9B8AFF 100%);padding:14px 16px 64px">
+                <div class="row between">
+                  <div class="row gap12">
+                    <div class="av md">雨</div>
+                    <div>
+                      <div class="row gap8">
+                        <b style="font-size:16.5px">王小雨</b>
+                        <span class="badge gold"><svg width="11" height="11"><use href="#i-crown"/></svg> 黄金分销官 Lv.4</span>
+                      </div>
+                      <div class="xs" style="opacity:.85;margin-top:4px">邀请码 DAREN-8823 · 已实名</div>
+                    </div>
+                  </div>
+                  <div style="position:relative;cursor:pointer" data-go="notice">
+                    <svg width="22" height="22"><use href="#i-bell"/></svg>
+                    <span style="position:absolute;right:-1px;top:-1px;width:8px;height:8px;border-radius:50%;background:#FFB020;box-shadow:0 0 0 2px rgba(109,93,252,.95)"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding:0 16px;margin-top:-50px">
+                <div class="c pad">
+                  <div class="row between">
+                    <div>
+                      <div class="xs mut">今日收益（元）</div>
+                      <div class="row gap8" style="align-items:baseline;margin-top:4px">
+                        <b class="num" style="font-size:31px;letter-spacing:-.03em">286.50</b>
+                        <span class="badge green"><svg width="10" height="10"><use href="#i-trend"/></svg> +12.4%</span>
+                      </div>
+                    </div>
+                    <button class="btn btn-gold sm" data-go="withdraw">去提现</button>
+                  </div>
+                  <div style="height:1px;background:var(--line);margin:13px 0"></div>
+                  <div class="row tc">
+                    <div style="flex:1"><div class="xs mut">累计收益</div><b class="num" style="font-size:15px;margin-top:3px;display:block">¥42,860</b></div>
+                    <div style="width:1px;height:26px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">可提现</div><b class="num" style="font-size:15px;margin-top:3px;display:block">¥3,280</b></div>
+                    <div style="width:1px;height:26px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">待结算</div><b class="num" style="font-size:15px;margin-top:3px;display:block">¥862</b></div>
+                  </div>
+                </div>
+
+                <div class="c pad mt12">
+                  <div class="row tc">
+                    <div style="flex:1"><div class="xs mut">今日访客</div><b class="num" style="font-size:19px;margin-top:3px;display:block">328</b></div>
+                    <div style="width:1px;height:28px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">新增客户</div><b class="num" style="font-size:19px;margin-top:3px;display:block">12</b></div>
+                    <div style="width:1px;height:28px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">成交订单</div><b class="num" style="font-size:19px;margin-top:3px;display:block">9</b></div>
+                  </div>
+                </div>
+
+                <div class="c pad mt12 row gap10" data-go="notice" style="cursor:pointer">
+                  <div style="width:32px;height:32px;border-radius:10px;background:#FFF3E2;color:#E2820B;display:grid;place-items:center;flex:none">
+                    <svg width="16" height="16"><use href="#i-mega"/></svg>
+                  </div>
+                  <div style="flex:1;min-width:0">
+                    <b class="el" style="font-size:13px;display:block">9 月起教育类课程佣金上调至 25%</b>
+                    <div class="xs mut">平台公告 · 2 小时前</div>
+                  </div>
+                  <svg width="15" height="15" style="color:var(--ink-3)"><use href="#i-cr"/></svg>
+                </div>
+
+                <div class="c pad mt12">
+                  <div class="qgrid">
+                    <div class="qi" data-go="qr"><i style="background:#F0EDFF;color:#6D5DFC"><svg width="20" height="20"><use href="#i-qr"/></svg></i><b>分销码</b></div>
+                    <div class="qi" data-go="poster"><i style="background:#FFF0E0;color:#E2820B"><svg width="20" height="20"><use href="#i-image"/></svg></i><b>专属海报</b></div>
+                    <div class="qi" data-go="content"><i style="background:#EAF2FE;color:#2E90FA"><svg width="20" height="20"><use href="#i-grid"/></svg></i><b>内容中心</b></div>
+                    <div class="qi" data-toast="邀请海报已生成"><i style="background:#E6F7EF;color:#0B8158"><svg width="20" height="20"><use href="#i-users"/></svg></i><b>邀请达人</b></div>
+                    <div class="qi" data-toast="打开我的客户"><i style="background:#FDECF2;color:#E5484D"><svg width="20" height="20"><use href="#i-user"/></svg></i><b>我的客户</b></div>
+                    <div class="qi" data-go="withdraw"><i style="background:#FFF8E0;color:#B78600"><svg width="20" height="20"><use href="#i-wallet"/></svg></i><b>提现</b></div>
+                    <div class="qi" data-go="task"><i style="background:#EDEBFF;color:#7C5DFC"><svg width="20" height="20"><use href="#i-target"/></svg></i><b>任务中心</b></div>
+                    <div class="qi" data-toast="打开学习中心"><i style="background:#E7F7FA;color:#0E7FD6"><svg width="20" height="20"><use href="#i-book"/></svg></i><b>学习中心</b></div>
+                  </div>
+                </div>
+
+                <div class="c pad mt12">
+                  <div class="row between">
+                    <b style="font-size:14.5px">成长进度</b>
+                    <span class="xs mut">距 Lv.5 还差 ¥1,860 业绩</span>
+                  </div>
+                  <div class="bar mt10"><i style="width:73%"></i></div>
+                  <div class="row between xs mut mt8"><span>Lv.4 佣金 25%</span><span>Lv.5 钻石 28%</span></div>
+                </div>
+
+                <div class="c mt12">
+                  <div class="pad" style="padding-bottom:6px">
+                    <div class="row between"><b style="font-size:14.5px">今日任务</b><span class="xs" style="color:var(--brand)">2/3 已完成</span></div>
+                  </div>
+                  <div class="cell" data-go="task">
+                    <div class="ci" style="background:#F0EDFF;color:#6D5DFC"><svg width="17" height="17"><use href="#i-share"/></svg></div>
+                    <div class="ct"><b>转发 3 条素材到微信</b><span>进度 2/3 · 奖励 20 成长值</span></div>
+                    <div class="cr"><span class="badge orange">去完成</span></div>
+                  </div>
+                  <div class="cell" data-go="task">
+                    <div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-check"/></svg></div>
+                    <div class="ct"><b>分享 1 次到朋友圈</b><span>已完成 · +15 成长值</span></div>
+                    <div class="cr"><span class="badge gray">已领取</span></div>
+                  </div>
+                </div>
+
+                <div class="row between" style="margin:18px 2px 10px">
+                  <b style="font-size:15.5px">热门素材</b><span class="xs mut">转发即带分销参数</span>
+                </div>
+                <div class="hscroll">
+                  <div class="c" style="width:190px;flex:none;cursor:pointer" data-go="asset">
+                    <div class="cov cv1" style="height:92px"><b style="font-size:13.5px;position:relative">孩子写作业拖拉？3 个方法</b></div>
+                    <div class="pad" style="padding:10px 12px"><div class="row gap6"><span class="tag">图文</span><span class="tag">K12</span></div><div class="xs mut" style="margin-top:6px">阅读 1.2w · 转发 386</div></div>
+                  </div>
+                  <div class="c" style="width:190px;flex:none;cursor:pointer" data-go="asset">
+                    <div class="cov cv2" style="height:92px"><b style="font-size:13.5px;position:relative">开学季必备：5 本书单</b></div>
+                    <div class="pad" style="padding:10px 12px"><div class="row gap6"><span class="tag">海报</span><span class="tag">活动</span></div><div class="xs mut" style="margin-top:6px">阅读 8,642 · 转发 512</div></div>
+                  </div>
+                  <div class="c" style="width:190px;flex:none;cursor:pointer" data-go="asset">
+                    <div class="cov cv3" style="height:92px"><b style="font-size:13.5px;position:relative">3 分钟看懂费曼学习法</b></div>
+                    <div class="pad" style="padding:10px 12px"><div class="row gap6"><span class="tag">短视频</span><span class="tag">方法论</span></div><div class="xs mut" style="margin-top:6px">播放 3.4w · 转发 921</div></div>
+                  </div>
+                </div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+            <div class="tab-slot"></div>
+          </div>
+
+          <!-- ============ 内容中心（tabBar） ============ -->
+          <div class="page" id="p-content" data-root data-nav="内容中心" data-title="内容中心" data-desc="素材库与一键转发" data-icon="i-grid">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div style="background:#fff;padding:8px 16px 12px;border-bottom:1px solid var(--line)">
+              <div class="sbox"><svg width="16" height="16"><use href="#i-search"/></svg><input placeholder="搜索素材、课程名、话题"></div>
+            </div>
+            <div class="sc">
+              <div class="chips" style="padding:14px 16px 0">
+                <span class="chip on">全部</span><span class="chip">图文</span><span class="chip">海报</span>
+                <span class="chip">短视频</span><span class="chip">销售话术</span><span class="chip">直播回放</span>
+              </div>
+
+              <div style="padding:14px 16px 0">
+                <div class="c" style="cursor:pointer" data-go="asset">
+                  <div class="cov cv1" style="height:146px">
+                    <div style="position:relative">
+                      <span class="badge ghost" style="display:inline-flex;margin-bottom:6px">今日精选</span>
+                      <b style="font-size:17px">开学季 · 家长最关心的 5 个问题</b>
+                      <div class="xs" style="opacity:.85;margin-top:6px">配套话术 + 海报已就绪，转发即得券</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row between" style="margin:18px 16px 10px">
+                <b style="font-size:15.5px">本周必转</b><span class="xs mut">按转化率排序</span>
+              </div>
+
+              <div style="padding:0 16px">
+                <div class="asset" style="margin-bottom:12px">
+                  <div class="cov cv2" data-go="asset" style="cursor:pointer">
+                    <div style="position:relative;width:100%">
+                      <div style="position:absolute;right:12px;top:-6px"><span class="badge ghost">转化率 8.2%</span></div>
+                      <b style="font-size:16px">开学季必备：5 本书单免费领</b>
+                    </div>
+                  </div>
+                  <div class="pad" style="padding:12px 14px 0">
+                    <div class="row gap6"><span class="tag">海报</span><span class="tag">活动</span><span class="tag">K12</span></div>
+                    <div class="row between xs mut mt8"><span>更新于 2 小时前</span>
+                      <span class="row gap10"><span class="row gap6"><svg width="13" height="13"><use href="#i-eye"/></svg>8,642</span><span class="row gap6"><svg width="13" height="13"><use href="#i-share"/></svg>512</span></span>
+                    </div>
+                  </div>
+                  <div class="acts" style="margin-top:12px">
+                    <button class="act pri" data-share><svg width="17" height="17"><use href="#i-share"/></svg>一键转发</button>
+                    <button class="act" data-go="poster"><svg width="17" height="17"><use href="#i-image"/></svg>生成海报</button>
+                    <button class="act" data-toast="文案已复制"><svg width="17" height="17"><use href="#i-copy"/></svg>复制文案</button>
+                  </div>
+                </div>
+
+                <div class="asset" style="margin-bottom:12px">
+                  <div class="cov cv3" data-go="asset" style="cursor:pointer">
+                    <div style="position:relative;width:100%">
+                      <div style="position:absolute;right:12px;top:-6px"><span class="badge ghost">转化率 6.7%</span></div>
+                      <b style="font-size:16px">3 分钟看懂「费曼学习法」</b>
+                    </div>
+                  </div>
+                  <div class="pad" style="padding:12px 14px 0">
+                    <div class="row gap6"><span class="tag">短视频</span><span class="tag">方法论</span></div>
+                    <div class="row between xs mut mt8"><span>更新于 昨天</span>
+                      <span class="row gap10"><span class="row gap6"><svg width="13" height="13"><use href="#i-play"/></svg>3.4w</span><span class="row gap6"><svg width="13" height="13"><use href="#i-share"/></svg>921</span></span>
+                    </div>
+                  </div>
+                  <div class="acts" style="margin-top:12px">
+                    <button class="act pri" data-share><svg width="17" height="17"><use href="#i-share"/></svg>一键转发</button>
+                    <button class="act" data-go="poster"><svg width="17" height="17"><use href="#i-image"/></svg>生成海报</button>
+                    <button class="act" data-toast="链接已复制"><svg width="17" height="17"><use href="#i-link"/></svg>复制链接</button>
+                  </div>
+                </div>
+
+                <div class="asset" style="margin-bottom:12px">
+                  <div class="cov cv6" data-go="asset" style="cursor:pointer">
+                    <div style="position:relative;width:100%">
+                      <div style="position:absolute;right:12px;top:-6px"><span class="badge ghost">转化率 5.1%</span></div>
+                      <b style="font-size:16px">学员提分 32 分：一位妈妈的真实记录</b>
+                    </div>
+                  </div>
+                  <div class="pad" style="padding:12px 14px 0">
+                    <div class="row gap6"><span class="tag">案例故事</span><span class="tag">转化</span></div>
+                    <div class="row between xs mut mt8"><span>更新于 3 天前</span>
+                      <span class="row gap10"><span class="row gap6"><svg width="13" height="13"><use href="#i-eye"/></svg>6,218</span><span class="row gap6"><svg width="13" height="13"><use href="#i-share"/></svg>348</span></span>
+                    </div>
+                  </div>
+                  <div class="acts" style="margin-top:12px">
+                    <button class="act pri" data-share><svg width="17" height="17"><use href="#i-share"/></svg>一键转发</button>
+                    <button class="act" data-go="poster"><svg width="17" height="17"><use href="#i-image"/></svg>生成海报</button>
+                    <button class="act" data-toast="文案已复制"><svg width="17" height="17"><use href="#i-copy"/></svg>复制文案</button>
+                  </div>
+                </div>
+
+                <div class="note v" style="margin-bottom:18px">达人提示：每天 19:00–21:00 是家长活跃高峰，此时转发的平均点击率高出 34%。</div>
+              </div>
+            </div>
+            <div class="tab-slot"></div>
+          </div>
+
+          <!-- ============ 推广 · 分销码（tabBar） ============ -->
+          <div class="page" id="p-qr" data-root data-nav="推广中心" data-dark="1" data-title="推广 · 分销码" data-desc="小程序码 + 邀请码 + 海报" data-icon="i-qr">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div class="gh" style="background:linear-gradient(180deg,#6D5DFC 0%,#8259FC 60%,#9B8AFF 100%);padding:12px 16px 70px">
+                <div class="row gap8" style="justify-content:center">
+                  <span class="chip" style="background:#fff;border-color:#fff;color:var(--brand-3)">我的分销码</span>
+                  <span class="chip" style="background:rgba(255,255,255,.18);border-color:transparent;color:#fff" data-go="poster">专属海报</span>
+                  <span class="chip" style="background:rgba(255,255,255,.18);border-color:transparent;color:#fff" data-toast="推广短链已复制">推广链接</span>
+                </div>
+              </div>
+
+              <div style="padding:0 16px;margin-top:-56px">
+                <div class="c pad tc" style="padding-bottom:18px">
+                  <div class="qrbox" style="margin:0 auto">
+                    <div class="qr-art"></div>
+                    <div class="qr-logo"><svg width="22" height="22"><use href="#i-crown"/></svg></div>
+                  </div>
+                  <b style="font-size:16px;display:block;margin-top:14px">王小雨 · 黄金分销官</b>
+                  <div class="xs mut" style="margin-top:4px">长按识别小程序码，自动绑定关系</div>
+                  <div class="row gap10" style="justify-content:center;margin-top:12px">
+                    <div style="background:#F4F5FA;border-radius:11px;padding:7px 14px">
+                      <span class="xs mut" style="display:block">邀请码</span>
+                      <b class="num" style="font-size:15px;letter-spacing:.04em">DAREN-8823</b>
+                    </div>
+                    <button class="btn btn-rim sm" data-toast="邀请码已复制" style="align-self:stretch"><svg width="14" height="14"><use href="#i-copy"/></svg> 复制</button>
+                  </div>
+                  <div class="row gap10 mt14">
+                    <button class="btn btn-gray" style="flex:1" data-toast="小程序码已保存到相册"><svg width="16" height="16"><use href="#i-down"/></svg> 保存码</button>
+                    <button class="btn btn-p" style="flex:1" data-share><svg width="16" height="16"><use href="#i-share"/></svg> 转发给好友</button>
+                  </div>
+                </div>
+
+                <div class="c pad mt12">
+                  <div class="row tc">
+                    <div style="flex:1"><div class="xs mut">累计扫码</div><b class="num" style="font-size:19px;margin-top:3px;display:block">1,286</b></div>
+                    <div style="width:1px;height:28px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">注册客户</div><b class="num" style="font-size:19px;margin-top:3px;display:block">86</b></div>
+                    <div style="width:1px;height:28px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">成交订单</div><b class="num" style="font-size:19px;margin-top:3px;display:block">23</b></div>
+                  </div>
+                  <div class="bar v mt14"><i style="width:62%"></i></div>
+                  <div class="xs mut mt8 tc">扫码转化率 6.7%，高于同级达人 2.1 个百分点</div>
+                </div>
+
+                <div class="note mt12">小程序码已写入 scene 参数 <b>sid=8823</b>，客户扫码进入即绑定；30 天内成交均计佣，先绑定者优先。</div>
+
+                <div class="sec-t"><h4>推广工具</h4></div>
+                <div class="c">
+                  <div class="cell" data-go="poster">
+                    <div class="ci" style="background:#FFF0E0;color:#E2820B"><svg width="17" height="17"><use href="#i-image"/></svg></div>
+                    <div class="ct"><b>专属海报模板库</b><span>12 套模板，canvas 自动生成带码版</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="邀请达人海报已生成">
+                    <div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-users"/></svg></div>
+                    <div class="ct"><b>邀请达人入伙</b><span>奖励 ¥50 / 人 + 团队分佣</span></div>
+                    <div class="cr"><span class="badge gold">+¥50</span><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="打开推广数据看板">
+                    <div class="ci" style="background:#EAF2FE;color:#2E90FA"><svg width="17" height="17"><use href="#i-chart"/></svg></div>
+                    <div class="ct"><b>推广数据看板</b><span>扫码 → 注册 → 成交漏斗</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="推广短链已复制">
+                    <div class="ci" style="background:#EDEBFF;color:#7C5DFC"><svg width="17" height="17"><use href="#i-link"/></svg></div>
+                    <div class="ct"><b>推广短链</b><span>edu.cn/d/8823 · 可粘贴到任意文案</span></div>
+                    <div class="cr"><span class="badge violet">复制</span></div>
+                  </div>
+                </div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+            <div class="tab-slot"></div>
+          </div>
+
+          <!-- ============ 收益中心（tabBar） ============ -->
+          <div class="page" id="p-wallet" data-root data-nav="收益中心" data-dark="1" data-title="收益中心" data-desc="余额、构成、趋势与提现" data-icon="i-wallet">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div class="gh" style="background:linear-gradient(180deg,#6D5DFC 0%,#8259FC 60%,#9B8AFF 100%);padding:14px 16px 26px">
+                <div class="xs" style="opacity:.85">可提现余额（元）</div>
+                <div class="row between" style="align-items:flex-end;margin-top:6px">
+                  <b class="num" style="font-size:38px;letter-spacing:-.03em">3,280.00</b>
+                  <button class="btn btn-gold" data-go="withdraw">立即提现</button>
+                </div>
+              </div>
+
+              <div style="padding:0 16px;margin-top:-6px">
+                <div class="c pad">
+                  <div class="row tc">
+                    <div style="flex:1"><div class="xs mut">累计收益</div><b class="num" style="font-size:16px;margin-top:4px;display:block">¥42,860</b></div>
+                    <div style="width:1px;height:28px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">待结算</div><b class="num" style="font-size:16px;margin-top:4px;display:block">¥862</b></div>
+                    <div style="width:1px;height:28px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">已提现</div><b class="num" style="font-size:16px;margin-top:4px;display:block">¥38,718</b></div>
+                  </div>
+                </div>
+
+                <div class="c pad mt12">
+                  <b style="font-size:14.5px">收益构成</b>
+                  <div class="row gap14 mt12" style="align-items:center">
+                    <div class="donut" style="flex:none"></div>
+                    <div style="flex:1">
+                      <div class="row between" style="margin-bottom:9px"><span class="row gap6 sm"><i style="width:9px;height:9px;border-radius:3px;background:#6D5DFC"></i>自购佣金</span><b class="num sm">42%</b></div>
+                      <div class="row between" style="margin-bottom:9px"><span class="row gap6 sm"><i style="width:9px;height:9px;border-radius:3px;background:#FFB020"></i>直属客户</span><b class="num sm">38%</b></div>
+                      <div class="row between"><span class="row gap6 sm"><i style="width:9px;height:9px;border-radius:3px;background:#12B76A"></i>团队分佣</span><b class="num sm">20%</b></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="c pad mt12">
+                  <div class="row between"><b style="font-size:14.5px">近 7 日收益</b><span class="xs mut">日均 ¥241</span></div>
+                  <div class="mini" style="margin-top:16px;margin-bottom:22px">
+                    <div style="height:42%" data-l="一"></div><div style="height:63%" data-l="二"></div>
+                    <div style="height:38%" data-l="三"></div><div style="height:78%" data-l="四"></div>
+                    <div style="height:55%" data-l="五"></div><div class="hl" style="height:96%" data-l="六"></div>
+                    <div style="height:70%" data-l="日"></div>
+                  </div>
+                </div>
+
+                <div class="sec-t"><h4>收益管理</h4></div>
+                <div class="c">
+                  <div class="cell" data-go="bill">
+                    <div class="ci" style="background:#F0EDFF;color:#6D5DFC"><svg width="17" height="17"><use href="#i-coins"/></svg></div>
+                    <div class="ct"><b>佣金明细</b><span>按订单追溯来源与结算状态</span></div>
+                    <div class="cr"><span class="badge gray">286 笔</span><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="打开提现记录">
+                    <div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-clock"/></svg></div>
+                    <div class="ct"><b>提现记录</b><span>最近：09-08 提现 ¥2,000 已到账</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="打开结算规则">
+                    <div class="ci" style="background:#FFF3E2;color:#E2820B"><svg width="17" height="17"><use href="#i-shield"/></svg></div>
+                    <div class="ct"><b>结算与佣金规则</b><span>确认收货后 7 天结算，T+1 到账</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                </div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+            <div class="tab-slot"></div>
+          </div>
+
+          <!-- ============ 我的（tabBar） ============ -->
+          <div class="page" id="p-mine" data-root data-nav="我的" data-dark="1" data-title="我的 · 个人中心" data-desc="身份、核心工具与设置" data-icon="i-user">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div class="gh" style="background:linear-gradient(180deg,#6D5DFC 0%,#8259FC 60%,#9B8AFF 100%);padding:14px 16px 58px">
+                <div class="row gap14">
+                  <div class="av lg">雨</div>
+                  <div style="flex:1;min-width:0">
+                    <div class="row gap8"><b style="font-size:18px">王小雨</b>
+                      <span class="badge gold"><svg width="11" height="11"><use href="#i-crown"/></svg> 黄金分销官</span>
+                    </div>
+                    <div class="xs" style="opacity:.85;margin-top:5px">ID 8823 · 邀请码 DAREN-8823</div>
+                    <div class="row gap6" style="margin-top:8px">
+                      <span class="badge ghost"><svg width="10" height="10"><use href="#i-shield"/></svg> 已实名</span>
+                      <span class="badge ghost">已绑卡</span><span class="badge ghost">入驻 268 天</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-gh sm" data-go="profile" style="align-self:flex-end">编辑</button>
+                </div>
+              </div>
+
+              <div style="padding:0 16px;margin-top:-44px">
+                <div class="c pad">
+                  <div class="row tc">
+                    <div style="flex:1;cursor:pointer" data-go="wallet"><div class="xs mut">累计收益</div><b class="num" style="font-size:17px;margin-top:4px;display:block">¥42,860</b></div>
+                    <div style="width:1px;height:28px;background:var(--line)"></div>
+                    <div style="flex:1;cursor:pointer" data-go="team"><div class="xs mut">团队人数</div><b class="num" style="font-size:17px;margin-top:4px;display:block">28</b></div>
+                    <div style="width:1px;height:28px;background:var(--line)"></div>
+                    <div style="flex:1;cursor:pointer" data-go="content"><div class="xs mut">素材转发</div><b class="num" style="font-size:17px;margin-top:4px;display:block">1,932</b></div>
+                  </div>
+                </div>
+
+                <div class="c mt12" style="background:linear-gradient(115deg,#FFF6E3,#FFEFD4);border:0">
+                  <div class="pad row gap12">
+                    <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#FFB020,#FF8A00);color:#fff;display:grid;place-items:center;flex:none">
+                      <svg width="20" height="20"><use href="#i-crown"/></svg>
+                    </div>
+                    <div style="flex:1;min-width:0">
+                      <b style="font-size:14px;color:#6B3F00">Lv.4 黄金分销官 · 佣金 25%</b>
+                      <div class="xs" style="color:#8A6A2A;margin-top:3px">再完成 ¥1,860 升级 Lv.5，佣金 28%</div>
+                    </div>
+                    <span class="badge gold">去升级</span>
+                  </div>
+                  <div style="padding:0 16px 14px"><div class="bar"><i style="width:73%"></i></div></div>
+                </div>
+
+                <div class="sec-t"><h4>核心工具</h4></div>
+                <div class="c pad">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="row gap10" data-go="qr" style="background:linear-gradient(135deg,#F3F0FF,#EAE5FF);border-radius:15px;padding:13px;cursor:pointer">
+                      <div style="width:36px;height:36px;border-radius:11px;background:#fff;color:#6D5DFC;display:grid;place-items:center;flex:none"><svg width="18" height="18"><use href="#i-qr"/></svg></div>
+                      <div><b style="font-size:13.5px;display:block">分销码</b><span class="xs mut">扫码即绑定</span></div>
+                    </div>
+                    <div class="row gap10" data-go="poster" style="background:linear-gradient(135deg,#FFF3E6,#FFEAD6);border-radius:15px;padding:13px;cursor:pointer">
+                      <div style="width:36px;height:36px;border-radius:11px;background:#fff;color:#E2820B;display:grid;place-items:center;flex:none"><svg width="18" height="18"><use href="#i-image"/></svg></div>
+                      <div><b style="font-size:13.5px;display:block">专属海报</b><span class="xs mut">12 套模板</span></div>
+                    </div>
+                    <div class="row gap10" data-go="content" style="background:linear-gradient(135deg,#EAF3FE,#DDEBFD);border-radius:15px;padding:13px;cursor:pointer">
+                      <div style="width:36px;height:36px;border-radius:11px;background:#fff;color:#2E90FA;display:grid;place-items:center;flex:none"><svg width="18" height="18"><use href="#i-grid"/></svg></div>
+                      <div><b style="font-size:13.5px;display:block">内容中心</b><span class="xs mut">一键转发</span></div>
+                    </div>
+                    <div class="row gap10" data-toast="推广短链已复制" style="background:linear-gradient(135deg,#EAF8F2,#DDF3E9);border-radius:15px;padding:13px;cursor:pointer">
+                      <div style="width:36px;height:36px;border-radius:11px;background:#fff;color:#0B8158;display:grid;place-items:center;flex:none"><svg width="18" height="18"><use href="#i-link"/></svg></div>
+                      <div><b style="font-size:13.5px;display:block">推广链接</b><span class="xs mut">短链 + 文案</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sec-t"><h4>我的经营</h4></div>
+                <div class="c">
+                  <div class="cell" data-toast="打开我的客户">
+                    <div class="ci" style="background:#FDECF2;color:#E5484D"><svg width="17" height="17"><use href="#i-user"/></svg></div>
+                    <div class="ct"><b>我的客户</b><span>86 位已绑定 · 今日新增 12</span></div>
+                    <div class="cr"><span class="badge violet">+12</span><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-go="team">
+                    <div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-users"/></svg></div>
+                    <div class="ct"><b>我的团队</b><span>直推 8 人 · 间推 20 人</span></div>
+                    <div class="cr"><span class="badge gold">分佣</span><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-go="wallet">
+                    <div class="ci" style="background:#FFF8E0;color:#B78600"><svg width="17" height="17"><use href="#i-wallet"/></svg></div>
+                    <div class="ct"><b>收益中心</b><span>可提现 ¥3,280.00</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-go="task">
+                    <div class="ci" style="background:#EDEBFF;color:#7C5DFC"><svg width="17" height="17"><use href="#i-target"/></svg></div>
+                    <div class="ct"><b>任务中心</b><span>2/3 已完成 · 可领 20 成长值</span></div>
+                    <div class="cr"><span class="badge orange">待领取</span><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="打开学习中心">
+                    <div class="ci" style="background:#E7F7FA;color:#0E7FD6"><svg width="17" height="17"><use href="#i-book"/></svg></div>
+                    <div class="ct"><b>学习中心</b><span>达人必修课 · 已完成 6/12</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                </div>
+
+                <div class="sec-t"><h4>服务与设置</h4></div>
+                <div class="c">
+                  <div class="cell" data-toast="打开实名认证">
+                    <div class="ci" style="background:#F0EDFF;color:#6D5DFC"><svg width="17" height="17"><use href="#i-shield"/></svg></div>
+                    <div class="ct"><b>实名认证</b><span>已认证 · 提现前提</span></div>
+                    <div class="cr"><span class="badge green">已通过</span><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="打开账户与安全">
+                    <div class="ci" style="background:#F2F3F7;color:#5B6178"><svg width="17" height="17"><use href="#i-lock"/></svg></div>
+                    <div class="ct"><b>账户与安全</b><span>手机号、登录密码、提现账户</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="打开帮助与客服">
+                    <div class="ci" style="background:#FFF3E2;color:#E2820B"><svg width="17" height="17"><use href="#i-help"/></svg></div>
+                    <div class="ct"><b>帮助与客服</b><span>常见问题 · 在线客服 9:00–21:00</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                </div>
+
+                <div style="padding:20px 0;text-align:center">
+                  <button class="btn btn-gray" style="width:100%" data-toast="已退出登录（演示）">退出登录</button>
+                  <div class="xs mut" style="margin-top:12px">达人中心 v3.2.0 · 小程序 UI 演示</div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-slot"></div>
+          </div>
+
+          <!-- ============ 素材详情（二级页） ============ -->
+          <div class="page" id="p-asset" data-nav="素材详情" data-title="素材详情" data-desc="阅读原文 + 多渠道转发" data-icon="i-image">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div class="cov cv1" style="height:186px;border-radius:0">
+                <div style="position:relative">
+                  <div class="row gap6" style="margin-bottom:8px"><span class="badge ghost">图文</span><span class="badge ghost">K12</span><span class="badge ghost">转化率 7.4%</span></div>
+                  <b style="font-size:20px;line-height:1.35">孩子写作业拖拉？3 个方法让效率翻倍</b>
+                </div>
+              </div>
+              <div style="padding:16px">
+                <div class="row between">
+                  <div class="row gap8">
+                    <div class="av sm">雨</div>
+                    <div>
+                      <div style="font-size:13px;font-weight:600">王小雨 · 黄金分销官</div>
+                      <div class="xs mut">已自动附加你的分销参数</div>
+                    </div>
+                  </div>
+                  <span class="badge violet"><svg width="10" height="10"><use href="#i-qr"/></svg> 带码</span>
+                </div>
+
+                <div style="height:1px;background:var(--line);margin:16px 0"></div>
+                <div style="font-size:14px;line-height:1.85;color:#3A3F5C">
+                  很多家长都有同样的困扰：孩子一写作业就磨蹭。问题往往不在"不认真"，而在任务拆解与时间感知。<br><br>
+                  <b>方法一：把作业切成 15 分钟的小块</b><br>用计时器设定 15 分钟，完成后休息 3 分钟，短周期能显著降低启动阻力。<br><br>
+                  <b>方法二：先做最难的那一科</b><br>意志力在刚开始时最充足，把最难的任务前置，效率提升最明显。<br><br>
+                  <b>方法三：用"完成清单"替代"催促"</b><br>把催促换成可视化的勾选项，让孩子获得即时反馈与掌控感。
+                </div>
+
+                <div class="row gap10 mt14">
+                  <span class="tag"><svg width="11" height="11"><use href="#i-cr"/></svg> 家庭教育</span>
+                  <span class="tag">学习方法</span><span class="tag">开学季</span>
+                </div>
+
+                <div class="c pad mt14">
+                  <div class="row tc">
+                    <div style="flex:1"><div class="xs mut">阅读</div><b class="num" style="font-size:16px;margin-top:3px;display:block">1.2w</b></div>
+                    <div style="width:1px;height:26px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">转发</div><b class="num" style="font-size:16px;margin-top:3px;display:block">386</b></div>
+                    <div style="width:1px;height:26px;background:var(--line)"></div>
+                    <div style="flex:1"><div class="xs mut">带来成交</div><b class="num" style="font-size:16px;margin-top:3px;display:block">41 单</b></div>
+                  </div>
+                </div>
+
+                <div class="note v mt14">素材已生成你的专属版本：好友点击卡片后通过 <b>sid=8823</b> 自动绑定，30 天内成交均计佣。</div>
+              </div>
+
+              <div style="padding:0 16px 18px">
+                <div class="c pad">
+                  <div class="row gap8">
+                    <button class="btn btn-gray" style="flex:1" data-toast="文案已复制到剪贴板"><svg width="16" height="16"><use href="#i-copy"/></svg> 文案</button>
+                    <button class="btn btn-gray" style="flex:1" data-go="poster"><svg width="16" height="16"><use href="#i-image"/></svg> 海报</button>
+                  </div>
+                  <button class="btn btn-p" style="width:100%;margin-top:10px" data-share>
+                    <svg width="17" height="17"><use href="#i-share"/></svg> 一键转发到微信
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 专属海报（二级页） ============ -->
+          <div class="page" id="p-poster" data-nav="专属海报" data-title="专属海报" data-desc="canvas 生成带小程序码海报" data-icon="i-image">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div style="padding:16px">
+                <div class="poster">
+                  <div style="position:relative;padding:20px;height:100%;display:flex;flex-direction:column">
+                    <div class="row gap10">
+                      <div class="av sm" style="width:36px;height:36px">雨</div>
+                      <div>
+                        <div style="font-size:13px;font-weight:600">王小雨 · 黄金分销官</div>
+                        <div style="font-size:10.5px;opacity:.85">为你推荐优质好课</div>
+                      </div>
+                    </div>
+                    <div style="margin-top:auto">
+                      <div style="font-size:22px;font-weight:700;line-height:1.3">开学季必备<br>5 本书单免费领</div>
+                      <div style="font-size:11.5px;opacity:.9;margin-top:10px;line-height:1.6">限时 9.1–9.15 · 仅限前 500 名<br>长按识别小程序码即可领取</div>
+                    </div>
+                    <div class="row between" style="margin-top:16px;align-items:flex-end">
+                      <div>
+                        <div style="font-size:10.5px;opacity:.85">长按识别 · 立即领取</div>
+                        <div style="font-size:12px;font-weight:600;margin-top:3px">邀请码 DAREN-8823</div>
+                      </div>
+                      <div style="width:64px;height:64px;border-radius:9px;background:#fff;padding:5px;flex:none">
+                        <div style="width:100%;height:100%;background:repeating-conic-gradient(from 0deg,#151833 0% 25%,#fff 0% 50%) 0 0/9px 9px"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sec-t" style="margin-bottom:10px"><h4>海报模板</h4><a>12 套</a></div>
+                <div class="hscroll" style="padding:2px 0 4px">
+                  <div style="width:74px;flex:none;cursor:pointer"><div class="poster" style="border-radius:11px;box-shadow:0 0 0 2.5px var(--brand)"></div><div class="xs mut tc" style="margin-top:6px">开学季</div></div>
+                  <div style="width:74px;flex:none;cursor:pointer"><div class="poster" style="border-radius:11px;background:linear-gradient(160deg,#0E7FD6,#22D3EE 60%,#34D399)"></div><div class="xs mut tc" style="margin-top:6px">方法论</div></div>
+                  <div style="width:74px;flex:none;cursor:pointer"><div class="poster" style="border-radius:11px;background:linear-gradient(160deg,#E5484D,#FB7185 60%,#FFB020)"></div><div class="xs mut tc" style="margin-top:6px">限时惠</div></div>
+                  <div style="width:74px;flex:none;cursor:pointer"><div class="poster" style="border-radius:11px;background:linear-gradient(160deg,#151833,#4C3FE0 60%,#8E7BFF)"></div><div class="xs mut tc" style="margin-top:6px">招募</div></div>
+                  <div style="width:74px;flex:none;cursor:pointer"><div class="poster" style="border-radius:11px;background:linear-gradient(160deg,#0B8158,#34D399 60%,#FFD27A)"></div><div class="xs mut tc" style="margin-top:6px">案例</div></div>
+                </div>
+
+                <div class="sec-t" style="margin-bottom:10px"><h4>内容编辑</h4></div>
+                <div class="c">
+                  <div class="cell" data-toast="打开主图替换">
+                    <div class="ci" style="background:#EAF2FE;color:#2E90FA"><svg width="17" height="17"><use href="#i-image"/></svg></div>
+                    <div class="ct"><b>更换主图</b><span>从素材库选择或本地上传</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="打开标题编辑">
+                    <div class="ci" style="background:#F0EDFF;color:#6D5DFC"><svg width="17" height="17"><use href="#i-edit"/></svg></div>
+                    <div class="ct"><b>编辑标题与副文案</b><span>开学季必备 / 5 本书单免费领</span></div>
+                    <div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div>
+                  </div>
+                  <div class="cell" data-toast="已切换显示手机号">
+                    <div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-msg"/></svg></div>
+                    <div class="ct"><b>显示我的手机号</b><span>方便客户直接联系你</span></div>
+                    <div class="cr"><span style="width:40px;height:22px;border-radius:99px;background:var(--brand);position:relative;display:block"><i style="position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff"></i></span></div>
+                  </div>
+                </div>
+
+                <div class="note mt14">海报由 <b>canvas 2d</b> 绘制并嵌入你的专属小程序码，客户长按识别即绑定关系。</div>
+              </div>
+            </div>
+            <div style="flex:none;display:flex;gap:9px;padding:10px 16px 20px;background:#fff;border-top:1px solid var(--line)">
+              <button class="btn btn-gray" style="flex:1" data-toast="海报已保存到相册"><svg width="16" height="16"><use href="#i-down"/></svg> 保存</button>
+              <button class="btn btn-p" style="flex:2" data-share><svg width="16" height="16"><use href="#i-share"/></svg> 立即分享</button>
+            </div>
+          </div>
+
+          <!-- ============ 任务中心（二级页） ============ -->
+          <div class="page" id="p-task" data-nav="任务中心" data-title="任务中心" data-desc="每日 / 成长 / 挑战任务" data-icon="i-target">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div class="gh" style="padding:14px 16px 20px">
+                <div class="row between">
+                  <div><div class="xs" style="opacity:.85">当前成长值</div><b class="num" style="font-size:28px">2,860</b></div>
+                  <div class="tc"><div class="xs" style="opacity:.85">今日已获</div><b class="num" style="font-size:28px">+45</b></div>
+                </div>
+                <div class="bar mt10" style="background:rgba(255,255,255,.22)"><i style="width:73%;background:#fff"></i></div>
+                <div class="xs mt8" style="opacity:.85">距 Lv.5 还需 140 成长值</div>
+              </div>
+              <div style="padding:16px">
+                <div class="sec-t" style="margin-top:0"><h4>每日任务</h4><a>每日 0 点重置</a></div>
+                <div class="c">
+                  <div class="cell">
+                    <div class="ci" style="background:#F0EDFF;color:#6D5DFC"><svg width="17" height="17"><use href="#i-share"/></svg></div>
+                    <div class="ct"><b>转发 3 条素材到微信</b><span>进度 2/3 · 奖励 20 成长值</span></div>
+                    <div class="cr"><button class="btn btn-p sm" data-go="content">去完成</button></div>
+                  </div>
+                  <div class="cell">
+                    <div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-check"/></svg></div>
+                    <div class="ct"><b>分享 1 次到朋友圈</b><span>已完成 · 奖励 15 成长值</span></div>
+                    <div class="cr"><span class="badge gray">已领取</span></div>
+                  </div>
+                  <div class="cell">
+                    <div class="ci" style="background:#FFF3E2;color:#E2820B"><svg width="17" height="17"><use href="#i-mega"/></svg></div>
+                    <div class="ct"><b>浏览 1 条平台公告</b><span>已完成 · 奖励 10 成长值</span></div>
+                    <div class="cr"><button class="btn btn-gold sm" data-toast="已领取 10 成长值">领取</button></div>
+                  </div>
+                </div>
+                <div class="sec-t"><h4>成长任务</h4></div>
+                <div class="c">
+                  <div class="cell"><div class="ci" style="background:#EDEBFF;color:#7C5DFC"><svg width="17" height="17"><use href="#i-award"/></svg></div><div class="ct"><b>累计成交 30 单</b><span>进度 23/30 · 300 成长值</span></div><div class="cr"><span class="badge violet">77%</span></div></div>
+                  <div class="cell"><div class="ci" style="background:#FDECF2;color:#E5484D"><svg width="17" height="17"><use href="#i-user"/></svg></div><div class="ct"><b>绑定 100 位客户</b><span>进度 86/100 · 200 成长值</span></div><div class="cr"><span class="badge violet">86%</span></div></div>
+                  <div class="cell"><div class="ci" style="background:#E7F7FA;color:#0E7FD6"><svg width="17" height="17"><use href="#i-book"/></svg></div><div class="ct"><b>完成全部必修课</b><span>进度 6/12 · 150 成长值</span></div><div class="cr"><span class="badge violet">50%</span></div></div>
+                </div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 我的团队（二级页） ============ -->
+          <div class="page" id="p-team" data-nav="我的团队" data-title="我的团队" data-desc="直推 / 间推成员与贡献" data-icon="i-users">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div style="padding:16px">
+                <div class="c pad" style="background:linear-gradient(135deg,#6D5DFC,#9B8AFF);color:#fff;border:0">
+                  <div class="row between">
+                    <div><div class="xs" style="opacity:.85">团队累计贡献佣金</div><b class="num" style="font-size:27px;margin-top:4px;display:block">¥8,572.00</b></div>
+                    <span class="badge ghost">本月 +¥1,240</span>
+                  </div>
+                  <div style="height:1px;background:rgba(255,255,255,.24);margin:14px 0"></div>
+                  <div class="row tc">
+                    <div style="flex:1"><div class="xs" style="opacity:.85">团队人数</div><b class="num" style="font-size:17px;margin-top:3px;display:block">28</b></div>
+                    <div style="flex:1"><div class="xs" style="opacity:.85">本月新增</div><b class="num" style="font-size:17px;margin-top:3px;display:block">5</b></div>
+                    <div style="flex:1"><div class="xs" style="opacity:.85">分佣比例</div><b class="num" style="font-size:17px;margin-top:3px;display:block">8%</b></div>
+                  </div>
+                </div>
+
+                <div class="c pad mt12">
+                  <div class="row between" style="margin-bottom:12px"><b style="font-size:14.5px">层级分布</b><span class="xs mut">二级分佣制</span></div>
+                  <div class="row gap10">
+                    <div style="flex:1;background:#F4F5FA;border-radius:13px;padding:12px">
+                      <div class="row between"><span class="xs mut">直接邀请</span><span class="badge violet">8%</span></div>
+                      <b class="num" style="font-size:21px;display:block;margin-top:6px">8 人</b>
+                    </div>
+                    <div style="flex:1;background:#F4F5FA;border-radius:13px;padding:12px">
+                      <div class="row between"><span class="xs mut">间接邀请</span><span class="badge gray">3%</span></div>
+                      <b class="num" style="font-size:21px;display:block;margin-top:6px">20 人</b>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sec-t"><h4>团队成员</h4><a>按贡献排序</a></div>
+                <div class="c">
+                  <div class="cell"><div class="av sm">陈</div><div class="ct"><b>陈思远 <span class="badge violet" style="margin-left:4px">Lv.3</span></b><span>加入 62 天 · 贡献 ¥2,180</span></div><div class="cr"><span class="badge gold">直推</span></div></div>
+                  <div class="cell"><div class="av sm" style="background:linear-gradient(135deg,#FFD27A,#FF8A00)">林</div><div class="ct"><b>林小满 <span class="badge violet" style="margin-left:4px">Lv.3</span></b><span>加入 48 天 · 贡献 ¥1,640</span></div><div class="cr"><span class="badge gold">直推</span></div></div>
+                  <div class="cell"><div class="av sm" style="background:linear-gradient(135deg,#7DD3FC,#0E7FD6)">赵</div><div class="ct"><b>赵一诺 <span class="badge gray" style="margin-left:4px">Lv.2</span></b><span>加入 30 天 · 贡献 ¥980</span></div><div class="cr"><span class="badge gold">直推</span></div></div>
+                  <div class="cell"><div class="av sm" style="background:linear-gradient(135deg,#A7F3D0,#0B8158)">周</div><div class="ct"><b>周若安 <span class="badge gray" style="margin-left:4px">Lv.1</span></b><span>加入 12 天 · 贡献 ¥210</span></div><div class="cr"><span class="badge gray">间推</span></div></div>
+                </div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+            <div style="flex:none;padding:10px 16px 20px;background:#fff;border-top:1px solid var(--line)">
+              <button class="btn btn-p" style="width:100%" data-toast="邀请海报已生成，快去分享"><svg width="17" height="17"><use href="#i-users"/></svg> 邀请达人加入团队</button>
+            </div>
+          </div>
+
+          <!-- ============ 佣金明细（二级页） ============ -->
+          <div class="page" id="p-bill" data-nav="佣金明细" data-title="佣金明细" data-desc="订单级佣金追溯" data-icon="i-coins">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div class="chips" style="padding:14px 16px 0">
+                <span class="chip on">全部</span><span class="chip">自购</span><span class="chip">直属客户</span><span class="chip">团队分佣</span><span class="chip">待结算</span>
+              </div>
+              <div style="padding:14px 16px 0">
+                <div class="c pad" style="background:linear-gradient(135deg,#5847E8,#8E7BFF);color:#fff;border:0">
+                  <div class="xs" style="opacity:.85">本月佣金（9 月）</div>
+                  <b class="num" style="font-size:27px;margin-top:4px;display:block">¥3,860.00</b>
+                  <div class="row gap10 mt10"><span class="badge ghost">自购 12 单</span><span class="badge ghost">直属 31 单</span><span class="badge ghost">团队 9 单</span></div>
+                </div>
+              </div>
+              <div style="padding:16px">
+                <div class="c">
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#F0EDFF;color:#6D5DFC"><svg width="17" height="17"><use href="#i-coins"/></svg></div><div class="ct"><b>小学阅读理解专项训练营</b><span>20260910-88231 · 直属 · 09-10 14:22</span></div><div class="cr" style="flex-direction:column;align-items:flex-end;gap:3px"><b class="num" style="color:#0B8158;font-size:15px">+¥74.50</b><span class="badge green">已结算</span></div></div>
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#FFF3E2;color:#E2820B"><svg width="17" height="17"><use href="#i-coins"/></svg></div><div class="ct"><b>开学季书单大礼包</b><span>20260910-87904 · 自购 · 09-10 10:05</span></div><div class="cr" style="flex-direction:column;align-items:flex-end;gap:3px"><b class="num" style="color:#0B8158;font-size:15px">+¥49.00</b><span class="badge orange">待结算</span></div></div>
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-users"/></svg></div><div class="ct"><b>初中数学思维课（团队·陈思远）</b><span>20260909-86122 · 分佣 8% · 09-09 21:47</span></div><div class="cr" style="flex-direction:column;align-items:flex-end;gap:3px"><b class="num" style="color:#0B8158;font-size:15px">+¥23.84</b><span class="badge green">已结算</span></div></div>
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#FDECF2;color:#E5484D"><svg width="17" height="17"><use href="#i-clock"/></svg></div><div class="ct"><b>英语自然拼读入门</b><span>20260907-83008 · 已退款 · 09-07 16:33</span></div><div class="cr" style="flex-direction:column;align-items:flex-end;gap:3px"><b class="num" style="color:#E5484D;font-size:15px">-¥38.00</b><span class="badge gray">已扣回</span></div></div>
+                </div>
+                <div class="note mt14">佣金在买家确认收货后 7 天转为可提现；发生退款时对应佣金自动扣回。</div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 提现（二级页） ============ -->
+          <div class="page" id="p-withdraw" data-nav="提现" data-title="提现" data-desc="金额、到账方式与规则" data-icon="i-wallet">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div style="padding:16px">
+                <div class="c pad">
+                  <div class="row between"><span class="sm" style="font-weight:600">提现金额</span><span class="xs mut">可提现 ¥3,280.00</span></div>
+                  <div class="row gap6 mt10" style="align-items:baseline;padding-bottom:14px;border-bottom:1px solid var(--line)">
+                    <span style="font-size:24px;font-weight:600">¥</span>
+                    <input value="2000" style="border:0;outline:none;font-size:36px;font-weight:650;width:100%;font-family:inherit;font-variant-numeric:tabular-nums;background:none">
+                  </div>
+                  <div class="row between mt10"><span class="xs mut">手续费 ¥0 · 预计到账 ¥2,000.00</span><span class="xs" style="color:var(--brand);font-weight:600">全部提现</span></div>
+                </div>
+
+                <div class="sec-t"><h4>到账方式</h4></div>
+                <div class="c">
+                  <div class="cell"><div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-msg"/></svg></div><div class="ct"><b>微信零钱</b><span>实时到账 · 单笔限额 ¥5,000</span></div><div class="cr"><span style="width:20px;height:20px;border-radius:50%;background:var(--brand);display:grid;place-items:center"><svg width="12" height="12" style="color:#fff"><use href="#i-check"/></svg></span></div></div>
+                  <div class="cell"><div class="ci" style="background:#EAF2FE;color:#2E90FA"><svg width="17" height="17"><use href="#i-card"/></svg></div><div class="ct"><b>招商银行 **** 6821</b><span>T+1 到账 · 单笔限额 ¥50,000</span></div><div class="cr"><span style="width:20px;height:20px;border-radius:50%;border:1.6px solid #D7DAE8;display:block"></span></div></div>
+                  <div class="cell" data-toast="打开添加银行卡"><div class="ci" style="background:#F2F3F7;color:#5B6178"><svg width="17" height="17"><use href="#i-star"/></svg></div><div class="ct"><b>添加银行卡</b><span>需与实名认证信息一致</span></div><div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div></div>
+                </div>
+
+                <div class="note mt14"><b>提现规则</b><br>· 最低 ¥100，每日最多 3 次<br>· 微信零钱实时到账，银行卡 T+1 工作日到账<br>· 需已完成实名认证，账户信息须与实名一致</div>
+
+                <div class="row gap10 mt14">
+                  <button class="btn btn-gray" style="flex:1" data-toast="打开提现记录">提现记录</button>
+                  <button class="btn btn-p" style="flex:2" data-toast="提现申请已提交，预计 2 小时内到账">确认提现 ¥2,000</button>
+                </div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 消息通知（二级页） ============ -->
+          <div class="page" id="p-notice" data-nav="消息通知" data-title="消息通知" data-desc="收益 / 订单 / 团队 / 系统" data-icon="i-bell">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div class="chips" style="padding:14px 16px 0">
+                <span class="chip on">全部</span><span class="chip">收益 12</span><span class="chip">订单 8</span><span class="chip">团队 3</span><span class="chip">系统 2</span>
+              </div>
+              <div style="padding:16px">
+                <div class="c">
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-coins"/></svg></div><div class="ct"><b>佣金到账提醒</b><span>客户通过你的分销码下单，佣金 ¥74.50 已入账</span></div><div class="cr" style="flex-direction:column;align-items:flex-end;gap:5px"><span class="xs mut">14:22</span><span style="width:8px;height:8px;border-radius:50%;background:var(--red)"></span></div></div>
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#F0EDFF;color:#6D5DFC"><svg width="17" height="17"><use href="#i-mega"/></svg></div><div class="ct"><b>平台公告</b><span>9 月起教育类课程佣金上调至 25%</span></div><div class="cr" style="flex-direction:column;align-items:flex-end;gap:5px"><span class="xs mut">12:05</span><span style="width:8px;height:8px;border-radius:50%;background:var(--red)"></span></div></div>
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#E6F7EF;color:#0B8158"><svg width="17" height="17"><use href="#i-users"/></svg></div><div class="ct"><b>团队新增成员</b><span>周若安 通过你的邀请码加入团队</span></div><div class="cr"><span class="xs mut">昨天</span></div></div>
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#FFF3E2;color:#E2820B"><svg width="17" height="17"><use href="#i-gift"/></svg></div><div class="ct"><b>任务奖励已发放</b><span>完成「分享到朋友圈」，15 成长值已到账</span></div><div class="cr"><span class="xs mut">昨天</span></div></div>
+                  <div class="cell" style="align-items:flex-start"><div class="ci" style="background:#EAF2FE;color:#2E90FA"><svg width="17" height="17"><use href="#i-grid"/></svg></div><div class="ct"><b>新素材上架</b><span>「开学季必备：5 本书单」已更新</span></div><div class="cr"><span class="xs mut">09-09</span></div></div>
+                </div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 资料设置（二级页） ============ -->
+          <div class="page" id="p-profile" data-nav="资料设置" data-title="资料设置" data-desc="头像、昵称与推广展示" data-icon="i-settings">
+            <div class="sb-slot"></div><div class="nav-slot"></div>
+            <div class="sc">
+              <div style="padding:16px">
+                <div class="c pad row gap14">
+                  <div class="av lg">雨</div>
+                  <div style="flex:1"><b style="font-size:15.5px">王小雨</b><div class="xs mut" style="margin-top:3px">ID 8823 · 黄金分销官 Lv.4</div></div>
+                  <button class="btn btn-gray sm" data-toast="打开头像更换">更换</button>
+                </div>
+
+                <div class="sec-t"><h4>基础资料</h4></div>
+                <div class="c">
+                  <div style="display:flex;align-items:center;gap:10px;padding:13px 15px"><span style="font-size:14px;color:var(--ink-2);width:76px;flex:none">昵称</span><input value="王小雨" style="flex:1;border:0;outline:none;font-size:14px;font-family:inherit"></div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-top:1px solid var(--line)"><span style="font-size:14px;color:var(--ink-2);width:76px;flex:none">手机号</span><input value="138 **** 6821" style="flex:1;border:0;outline:none;font-size:14px;font-family:inherit"><span class="xs" style="color:var(--brand)">更换</span></div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-top:1px solid var(--line)"><span style="font-size:14px;color:var(--ink-2);width:76px;flex:none">微信号</span><input value="xiaoyu_2024" style="flex:1;border:0;outline:none;font-size:14px;font-family:inherit"></div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:13px 15px;border-top:1px solid var(--line)"><span style="font-size:14px;color:var(--ink-2);width:76px;flex:none">所在城市</span><input value="广东 · 深圳" style="flex:1;border:0;outline:none;font-size:14px;font-family:inherit"></div>
+                </div>
+
+                <div class="sec-t"><h4>推广展示设置</h4></div>
+                <div class="c">
+                  <div class="cell" data-toast="已切换展示手机号"><div class="ci" style="background:#EAF2FE;color:#2E90FA"><svg width="17" height="17"><use href="#i-msg"/></svg></div><div class="ct"><b>海报展示我的手机号</b><span>关闭后仅展示小程序码</span></div><div class="cr"><span style="width:40px;height:22px;border-radius:99px;background:var(--brand);position:relative;display:block"><i style="position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff"></i></span></div></div>
+                  <div class="cell" data-toast="已切换展示真实姓名"><div class="ci" style="background:#F0EDFF;color:#6D5DFC"><svg width="17" height="17"><use href="#i-user"/></svg></div><div class="ct"><b>展示真实姓名</b><span>增强客户信任度</span></div><div class="cr"><span style="width:40px;height:22px;border-radius:99px;background:#D7DAE8;position:relative;display:block"><i style="position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff"></i></span></div></div>
+                  <div class="cell" data-toast="打开自动转发设置"><div class="ci" style="background:#FFF3E2;color:#E2820B"><svg width="17" height="17"><use href="#i-zap"/></svg></div><div class="ct"><b>转发自动附加寄语</b><span>使用我的默认推广话术</span></div><div class="cr"><svg width="15" height="15"><use href="#i-cr"/></svg></div></div>
+                </div>
+
+                <div class="row gap10 mt14">
+                  <button class="btn btn-gray" style="flex:1">取消</button>
+                  <button class="btn btn-p" style="flex:2" data-toast="资料已保存">保存</button>
+                </div>
+                <div style="height:18px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ 页面总览 ============ -->
+  <section class="sec">
+    <div class="sec-h">
+      <div class="sec-n">03 / SCREEN GALLERY</div>
+      <h2>全部页面总览</h2>
+      <p>13 个页面：5 个 tabBar 页面 + 8 个二级页面（由脚本自动同步生成，与上方交互原型同源）。</p>
+    </div>
+    <div class="ov-grid" id="ovGrid"></div>
+  </section>
+
+  <!-- 04 关键实现 -->
+  <section class="sec">
+    <div class="sec-h">
+      <div class="sec-n">04 / KEY IMPLEMENTATION</div>
+      <h2>核心能力的小程序实现要点</h2>
+      <p>设计与实现的关键衔接点：分销参数如何随转发传递、海报如何生成、关系如何绑定。</p>
+    </div>
+    <div class="spec-grid">
+      <div class="spec">
+        <h4><span><svg width="15" height="15"><use href="#i-share"/></svg></span>转发携带分销参数</h4>
+        <p>在分享路径里带上达人 ID，好友打开即完成归因，无需填写邀请码。</p>
+        <pre style="margin-top:10px;background:#151833;color:#C9CEEA;border-radius:12px;padding:12px;font-size:11.5px;line-height:1.65;overflow-x:auto"><code>onShareAppMessage() {
+  const sid = getApp().globalData.sid  // 8823
+  return {
+    title: '孩子写作业拖拉？3 个方法',
+    path: `/pages/asset/asset?id=A102&amp;sid=${sid}`,
+    imageUrl: this.data.cover
+  }
+}</code></pre>
+      </div>
+      <div class="spec">
+        <h4><span><svg width="15" height="15"><use href="#i-qr"/></svg></span>扫码绑定关系</h4>
+        <p>小程序码写入 scene，进入时解析并上报绑定，配合服务端 30 天锁客。</p>
+        <pre style="margin-top:10px;background:#151833;color:#C9CEEA;border-radius:12px;padding:12px;font-size:11.5px;line-height:1.65;overflow-x:auto"><code>onLoad(query) {
+  if (query.scene) {
+    const s = decodeURIComponent(query.scene)
+    // scene=sid_8823
+    const sid = s.split('_')[1]
+    bindDistributor(sid)
+  }
+  if (query.sid) bindDistributor(query.sid)
+}</code></pre>
+      </div>
+      <div class="spec">
+        <h4><span><svg width="15" height="15"><use href="#i-image"/></svg></span>canvas 生成专属海报</h4>
+        <p>用 canvas 2d 绘制模板 + 小程序码，导出临时文件后保存到相册。</p>
+        <pre style="margin-top:10px;background:#151833;color:#C9CEEA;border-radius:12px;padding:12px;font-size:11.5px;line-height:1.65;overflow-x:auto"><code>wx.canvasToTempFilePath({
+  canvas, destWidth: 750, destHeight: 1000,
+  success: res =&gt; wx.saveImageToPhotosAlbum({
+    filePath: res.tempFilePath
+  })
+})</code></pre>
+      </div>
+      <div class="spec">
+        <h4><span><svg width="15" height="15"><use href="#i-copy"/></svg></span>复制文案与 tabBar 配置</h4>
+        <p>复制走系统剪贴板；tabBar 用原生 5 项，选中态品牌紫。</p>
+        <pre style="margin-top:10px;background:#151833;color:#C9CEEA;border-radius:12px;padding:12px;font-size:11.5px;line-height:1.65;overflow-x:auto"><code>wx.setClipboardData({
+  data: this.data.copywriting
+})
+// app.json
+"tabBar": {
+  "color": "#7A7E8C",
+  "selectedColor": "#6D5DFC",
+  "list": [ /* 5 项 */ ]
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    本方案为界面设计与信息架构演示，数据均为示例值。落地时需补充：小程序码 scene 参数与分销关系归属的服务端校验、海报 canvas 生成与素材版权合规、佣金结算与税务处理、以及「推广」凸起按钮所需 custom-tab-bar 组件的选型评估。
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var screen = document.getElementById('screen');
+  var pages  = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var ROOTS  = ['index','content','qr','wallet','mine'];
+
+  function idOf(p){ return p.id.slice(2); }
+
+  pages.forEach(function(p){
+    var id = idOf(p), dark = p.getAttribute('data-dark') === '1';
+
+    var sb = document.getElementById('t-sb').content.querySelector('.sb').cloneNode(true);
+    if (dark) sb.classList.add('dk');
+    var sbs = p.querySelector('.sb-slot');
+    if (sbs) sbs.parentNode.replaceChild(sb, sbs);
+
+    var nav = document.getElementById('t-nav').content.querySelector('.nav').cloneNode(true);
+    if (dark) nav.classList.add('dk');
+    nav.querySelector('.t').textContent = p.getAttribute('data-nav') || '';
+    var back = nav.querySelector('.back');
+    if (p.hasAttribute('data-root')) back.parentNode.removeChild(back);
+    var ns = p.querySelector('.nav-slot');
+    if (ns) ns.parentNode.replaceChild(nav, ns);
+
+    var ts = p.querySelector('.tab-slot');
+    if (ts) {
+      if (p.hasAttribute('data-root')) {
+        var t = document.getElementById('t-tab').content.cloneNode(true);
+        var wrap = t.querySelector('div');
+        wrap.querySelectorAll('.i').forEach(function(i){
+          if (i.getAttribute('data-tab') === id) i.classList.add('on');
+        });
+        var frag = document.createDocumentFragment();
+        while (wrap.firstChild) frag.appendChild(wrap.firstChild);
+        ts.parentNode.replaceChild(frag, ts);
+      } else {
+        ts.parentNode.removeChild(ts);
+      }
+    }
+  });
+
+  var nav = document.getElementById('pgnav');
+  pages.forEach(function(p){
+    var id = idOf(p);
+    var b = document.createElement('button');
+    b.className = 'pgbtn';
+    b.setAttribute('data-pg', id);
+    b.innerHTML = '<svg width="16" height="16"><use href="#' + (p.getAttribute('data-icon') || 'i-home') + '"/></svg>' +
+                  '<span>' + (p.getAttribute('data-title') || id) + '</span>';
+    if (p.hasAttribute('data-root')) b.querySelector('span').style.fontWeight = '600';
+    nav.appendChild(b);
+  });
+
+  var ovGrid = document.getElementById('ovGrid');
+  pages.forEach(function(p){
+    var item = document.createElement('div'); item.className = 'ov';
+    var frame = document.createElement('div'); frame.className = 'ov-frame';
+    var inner = document.createElement('div'); inner.className = 'ov-in';
+    var clone = p.cloneNode(true);
+    clone.removeAttribute('id'); clone.classList.add('on'); clone.style.zIndex = '1';
+    inner.appendChild(clone); frame.appendChild(inner);
+    var cap = document.createElement('div'); cap.className = 'ov-cap';
+    cap.innerHTML = '<b>' + (p.getAttribute('data-title') || '') + '</b><span>' + (p.getAttribute('data-desc') || '') + '</span>';
+    item.appendChild(frame); item.appendChild(cap); ovGrid.appendChild(item);
+  });
+
+  var stack = ['mine'];
+  function apply(){
+    pages.forEach(function(p){
+      var idx = stack.indexOf(idOf(p));
+      if (idx >= 0) { p.classList.add('on'); p.style.zIndex = String(10 + idx * 10); }
+      else { p.classList.remove('on'); p.style.zIndex = '0'; }
+    });
+    Array.prototype.forEach.call(nav.children, function(b){
+      b.classList.toggle('on', b.getAttribute('data-pg') === stack[stack.length - 1]);
+    });
+  }
+  function go(id){
+    if (!document.getElementById('p-' + id)) return;
+    if (stack[stack.length - 1] === id) return;
+    var i = stack.indexOf(id);
+    if (i >= 0) stack = stack.slice(0, i + 1);
+    else if (ROOTS.indexOf(id) >= 0) stack = [id];
+    else stack.push(id);
+    apply();
+  }
+  function back(){ if (stack.length > 1) { stack.pop(); apply(); } }
+
+  var toast = document.getElementById('toast'), toastTxt = document.getElementById('toastTxt'), tTimer;
+  function say(msg){
+    toastTxt.textContent = msg;
+    toast.classList.add('on');
+    clearTimeout(tTimer);
+    tTimer = setTimeout(function(){ toast.classList.remove('on'); }, 1500);
+  }
+
+  var mask = document.getElementById('mask'), sheet = document.getElementById('sheet');
+  function closeSheet(){ mask.classList.remove('on'); sheet.classList.remove('on'); }
+  mask.addEventListener('click', closeSheet);
+  document.getElementById('sheetClose').addEventListener('click', closeSheet);
+  document.getElementById('sheetClose2').addEventListener('click', closeSheet);
+
+  screen.addEventListener('click', function(e){
+    var backEl = e.target.closest('[data-back]');
+    if (backEl) { back(); return; }
+    var tab = e.target.closest('.mtb .i');
+    if (tab) { go(tab.getAttribute('data-tab')); return; }
+    var share = e.target.closest('[data-share]');
+    if (share) { mask.classList.add('on'); sheet.classList.add('on'); return; }
+    var goEl = e.target.closest('[data-go]');
+    if (goEl) go(goEl.getAttribute('data-go'));
+    var toastEl = e.target.closest('[data-toast]');
+    if (toastEl) say(toastEl.getAttribute('data-toast'));
+  });
+
+  nav.addEventListener('click', function(e){
+    var b = e.target.closest('.pgbtn');
+    if (b) go(b.getAttribute('data-pg'));
+  });
+
+  apply();
+})();
+</script>
+
+          <div class="mask" id="mask"></div>
+
+          <div class="sheet" id="sheet">
+            <div class="handle"></div>
+            <div style="padding:0 16px">
+              <div class="row between" style="margin-bottom:14px">
+                <div>
+                  <b style="font-size:16.5px">转发素材</b>
+                  <div class="sm mut" style="margin-top:2px">已自动附加你的分销参数</div>
+                </div>
+                <div style="cursor:pointer;color:var(--ink-3)" id="sheetClose"><svg width="22" height="22" style="transform:rotate(90deg)"><use href="#i-cr"/></svg></div>
+              </div>
+
+              <div class="c pad" style="display:flex;gap:12px;align-items:center;margin-bottom:16px">
+                <div style="width:52px;height:52px;border-radius:12px;flex:none" class="cv1"></div>
+                <div style="flex:1;min-width:0">
+                  <b class="el" style="font-size:13.5px;display:block">孩子写作业拖拉？3 个方法让效率翻倍</b>
+                  <div class="xs mut" style="margin-top:3px">图文 · 阅读 1.2w · 转发 386</div>
+                </div>
+                <span class="badge violet"><svg width="10" height="10"><use href="#i-qr"/></svg> 带码</span>
+              </div>
+
+              <div class="chan">
+                <div class="chi" data-toast="已唤起微信好友列表"><i style="background:linear-gradient(135deg,#22C55E,#16A34A)"><svg width="22" height="22"><use href="#i-msg"/></svg></i><b>微信好友</b></div>
+                <div class="chi" data-toast="已唤起微信群列表"><i style="background:linear-gradient(135deg,#2E90FA,#0E7FD6)"><svg width="22" height="22"><use href="#i-users"/></svg></i><b>微信群</b></div>
+                <div class="chi" data-toast="已生成朋友圈海报，请保存后发布"><i style="background:linear-gradient(135deg,#34D399,#0B8158)"><svg width="22" height="22"><use href="#i-image"/></svg></i><b>朋友圈</b></div>
+                <div class="chi g" data-toast="海报已保存到相册"><i><svg width="21" height="21"><use href="#i-down"/></svg></i><b>保存海报</b></div>
+                <div class="chi g" data-toast="文案已复制到剪贴板"><i><svg width="21" height="21"><use href="#i-copy"/></svg></i><b>复制文案</b></div>
+                <div class="chi g" data-toast="推广短链已复制"><i><svg width="21" height="21"><use href="#i-link"/></svg></i><b>复制链接</b></div>
+              </div>
+
+              <div style="margin-top:16px">
+                <div class="sm" style="margin-bottom:8px;font-weight:600">转发寄语（可选）</div>
+                <div class="sbox">
+                  <input placeholder="例如：亲测有效，需要的家长可以看看" value="亲测有效，需要的家长可以看看">
+                </div>
+                <div class="row gap8 mt10">
+                  <span class="chip on">热情推荐</span><span class="chip">专业解读</span><span class="chip">限时限量</span>
+                </div>
+              </div>
+
+              <div class="note v mt14">好友点击卡片后，通过 path 携带的 <b>sid=8823</b> 自动绑定分销关系，30 天内成交均计佣。</div>
+
+              <div class="row gap10 mt14">
+                <button class="btn btn-gray" style="flex:1" id="sheetClose2">取消</button>
+                <button class="btn btn-p" style="flex:2" data-toast="转发成功，已计入今日任务">确认转发</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="wxtoast" id="toast">
+            <svg width="34" height="34" style="color:#fff"><use href="#i-check"/></svg>
+            <span id="toastTxt">操作成功</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <h3>页面导航</h3>
+        <p class="lead">5 个 tabBar 页面 + 8 个二级页面，点击任意按钮跳转；点导航栏左上角返回键逐级回退。</p>
+        <div class="pgnav" id="pgnav"></div>
+        <div class="hintbar">
+          <svg width="17" height="17" style="flex:none;margin-top:2px"><use href="#i-zap"/></svg>
+          <div><b>重点体验：</b>内容中心 → 点素材卡 → 素材详情 → 点「一键转发」唤起半屏面板（微信好友 / 群 / 朋友圈 / 保存海报）。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

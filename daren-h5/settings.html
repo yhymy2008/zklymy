@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="format-detection" content="telephone=no">
+<title>资料设置 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-bar">
+  <div id="nav"></div>
+
+  <!-- 基础资料 -->
+  <div class="sect"><span class="sect-t">基础资料</span></div>
+  <div class="card inset">
+    <div class="field line" id="avatar-field">
+      <span class="field-l">头像</span>
+      <div class="row gap8">
+        <div class="av av-sm">雨</div>
+        <i class="ic icg-cr" style="width:9px;height:9px"></i>
+      </div>
+    </div>
+    <div class="field line">
+      <span class="field-l">昵称</span>
+      <input class="field-in" id="nick" value="王小雨" maxlength="16">
+    </div>
+    <div class="field line">
+      <span class="field-l">手机号</span>
+      <div class="row gap6">
+        <span class="field-v">138****8823</span>
+        <span class="xs brand bold" id="change-phone">更换</span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-l">微信号</span>
+      <input class="field-in" id="wx" value="xiaoyu_edu" placeholder="用于客服联系">
+    </div>
+  </div>
+
+  <!-- 达人身份 -->
+  <div class="sect">
+    <span class="sect-t">达人身份</span>
+    <span class="sect-m" onclick="APP.toast('达人等级由成长值自动计算，不可手动修改')">等级规则 <i class="ic ic-cr" style="width:9px;height:9px"></i></span>
+  </div>
+  <div class="card inset">
+    <div class="field line">
+      <span class="field-l">达人 ID</span>
+      <span class="field-v num">8823</span>
+    </div>
+    <div class="field line">
+      <span class="field-l">当前等级</span>
+      <span class="badge badge-gold">Lv.4 黄金分销官</span>
+    </div>
+    <div class="field line">
+      <span class="field-l">邀请码</span>
+      <div class="row gap6">
+        <span class="field-v brand heavy num">DAREN-8823</span>
+        <span class="xs brand bold" id="copy-invite">复制</span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-l">入驻时间</span>
+      <span class="field-v">2025-12-20 · 已入驻 268 天</span>
+    </div>
+  </div>
+
+  <!-- 提现账户 -->
+  <div class="sect"><span class="sect-t">提现账户</span></div>
+  <div class="card inset">
+    <div class="field line">
+      <span class="field-l">实名认证</span>
+      <div class="row gap6">
+        <span class="field-v">王小雨 · 已认证</span>
+        <i class="ic ic-check" style="width:15px;height:15px"></i>
+      </div>
+    </div>
+    <div class="field line" id="bank-field">
+      <span class="field-l">银行卡</span>
+      <div class="row gap8">
+        <span class="field-v">招商银行 ****8823</span>
+        <i class="ic icg-cr" style="width:9px;height:9px"></i>
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-l">微信零钱</span>
+      <div class="row gap8">
+        <span class="field-v">已开通</span>
+        <span class="badge badge-green">可用</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通知 -->
+  <div class="sect"><span class="sect-t">通知与偏好</span></div>
+  <div class="card inset">
+    <div class="field line">
+      <span class="field-l">佣金到账提醒</span>
+      <div class="switch on" data-sw="1"></div>
+    </div>
+    <div class="field line">
+      <span class="field-l">新素材上架提醒</span>
+      <div class="switch on" data-sw="1"></div>
+    </div>
+    <div class="field line">
+      <span class="field-l">团队动态提醒</span>
+      <div class="switch" data-sw="0"></div>
+    </div>
+    <div class="field">
+      <span class="field-l">每日经营日报</span>
+      <div class="switch" data-sw="0"></div>
+    </div>
+  </div>
+
+  <div class="inset mt16">
+    <span class="btn btn-gray btn-block" id="logout">退出登录</span>
+  </div>
+  <div class="empty" style="padding:24px 0">达人中心 H5 v1.0.0</div>
+</div>
+
+<div class="fixed-bar">
+  <span class="btn btn-primary btn-block" id="save">保存修改</span>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  APP.nav({ title: '资料设置', back: true })
+
+  /* 开关 */
+  document.querySelectorAll('.switch').forEach(function (el) {
+    el.addEventListener('click', function () {
+      el.classList.toggle('on')
+    })
+  })
+
+  document.getElementById('avatar-field').addEventListener('click', function () {
+    APP.toast('请在微信端通过头像上传组件更换')
+  })
+  document.getElementById('change-phone').addEventListener('click', function () {
+    APP.toast('更换手机号需短信验证，功能建设中')
+  })
+  document.getElementById('copy-invite').addEventListener('click', function () {
+    APP.copy('DAREN-8823', '邀请码已复制')
+  })
+  document.getElementById('bank-field').addEventListener('click', function () {
+    APP.toast('更换银行卡需重新实名验证')
+  })
+  document.getElementById('logout').addEventListener('click', function () {
+    APP.toast('演示环境不执行退出')
+  })
+  document.getElementById('save').addEventListener('click', function () {
+    APP.ok('资料已保存')
+  })
+})()
+</script>
+</body>
+</html>

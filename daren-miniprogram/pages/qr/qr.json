@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "推广 · 分销码",
+  "navigationBarBackgroundColor": "#6D5DFC",
+  "navigationBarTextStyle": "white",
+  "backgroundColorTop": "#6D5DFC",
+  "backgroundColorBottom": "#F4F5FA",
+  "enablePullDownRefresh": false,
+  "usingComponents": {}
+}

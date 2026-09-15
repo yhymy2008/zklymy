@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="format-detection" content="telephone=no">
+<title>专属海报 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-bar">
+  <div id="nav"></div>
+
+  <!-- 模板 -->
+  <div class="sect">
+    <span class="sect-t">选择模板</span>
+    <span class="sect-m">12 套模板 · 已选 1 套</span>
+  </div>
+  <div class="hscroll">
+    <div class="hscroll-in" id="tpls"></div>
+  </div>
+
+  <!-- 海报预览 -->
+  <div class="inset mt16">
+    <div class="poster" id="poster-box">
+      <img id="poster-img" alt="专属海报" style="width:100%;display:block">
+    </div>
+    <div class="xs mut tc mt12">长按海报即可保存到相册，或直接转发给好友</div>
+  </div>
+
+  <!-- 说明 -->
+  <div class="inset mt16">
+    <div class="card pad">
+      <div class="row between">
+        <span class="md bold">海报已自动带上你的分销码</span>
+        <span class="badge badge-green">归因正常</span>
+      </div>
+      <div class="divider mt12"></div>
+      <div class="kv"><span class="sm t2">邀请码</span><span class="md heavy brand num">DAREN-8823</span></div>
+      <div class="kv" style="padding-top:0"><span class="sm t2">扫码绑定有效期</span><span class="sm t1">30 天锁客</span></div>
+      <div class="kv" style="padding-top:0"><span class="sm t2">适用场景</span><span class="sm t1">朋友圈 / 社群 / 私聊</span></div>
+    </div>
+  </div>
+
+  <div class="inset mt16 mb20">
+    <div class="note">
+      <i class="ic ic-image" style="width:18px;height:18px;margin-top:1px"></i>
+      <div class="flex1">
+        <div class="md bold">建议</div>
+        <div class="xs mut mt4 lh16">朋友圈首图用海报 + 一段真实感受，转化率通常比纯链接高 2–3 倍。发圈后 30 分钟内回复评论，能显著提升曝光。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="fixed-bar">
+  <span class="btn btn-gray flex1" id="btn-guide"><i class="ic icg-share" style="width:15px;height:15px;margin-right:5px"></i>转发到微信</span>
+  <span class="btn btn-primary flex1" id="btn-save"><i class="ic icw-down" style="width:15px;height:15px;margin-right:5px"></i>保存海报</span>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+  var C = D.posterContent
+
+  APP.nav({ title: '专属海报', back: true })
+
+  /* 模板配色：切换模板即换一套海报主色 */
+  var SKIN = {
+    p1: ['#6D5DFC', '#8E7BFF', '开学季'],
+    p2: ['#22D3EE', '#2563EB', '方法论'],
+    p3: ['#F472B6', '#BE185D', '限时惠'],
+    p4: ['#FB923C', '#C2410C', '招募'],
+    p5: ['#34D399', '#0F766E', '案例']
+  }
+  var current = 'p1'
+
+  /* ---------- canvas 绘制 ---------- */
+  var W = 300
+  var H = 480
+
+  function roundRect(g, x, y, w, h, r) {
+    g.beginPath()
+    g.moveTo(x + r, y)
+    g.arcTo(x + w, y, x + w, y + h, r)
+    g.arcTo(x + w, y + h, x, y + h, r)
+    g.arcTo(x, y + h, x, y, r)
+    g.arcTo(x, y, x + w, y, r)
+    g.closePath()
+  }
+
+  function disk(g, x, y, r) {
+    g.beginPath()
+    g.arc(x, y, r, 0, Math.PI * 2)
+    g.fill()
+  }
+
+  function finder(g, x, y, c) {
+    g.fillStyle = '#151833'; g.fillRect(x, y, c * 7, c * 7)
+    g.fillStyle = '#FFFFFF'; g.fillRect(x + c, y + c, c * 5, c * 5)
+    g.fillStyle = '#151833'; g.fillRect(x + c * 2, y + c * 2, c * 3, c * 3)
+  }
+
+  /** 绘制类二维码图案（演示用；接真实接口后改为 drawImage 小程序码） */
+  function drawQR(g, x, y, size) {
+    var n = 25
+    var c = size / n
+    var seed = 20260914
+    function rnd() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff }
+    function inFinder(i, j) {
+      return (i < 8 && j < 8) || (i > 16 && j < 8) || (i < 8 && j > 16)
+    }
+    g.fillStyle = '#151833'
+    for (var i = 0; i < n; i++) {
+      for (var j = 0; j < n; j++) {
+        if (inFinder(i, j)) continue
+        if (rnd() > 0.52) g.fillRect(x + i * c, y + j * c, c, c)
+      }
+    }
+    finder(g, x, y, c)
+    finder(g, x + (n - 7) * c, y, c)
+    finder(g, x, y + (n - 7) * c, c)
+
+    // 中心 logo
+    var cx = x + size / 2
+    var cy = y + size / 2
+    g.fillStyle = '#FFFFFF'; roundRect(g, cx - 15, cy - 15, 30, 30, 8); g.fill()
+    var lg = g.createLinearGradient(cx - 12, cy - 12, cx + 12, cy + 12)
+    lg.addColorStop(0, SKIN[current][0]); lg.addColorStop(1, SKIN[current][1])
+    g.fillStyle = lg; roundRect(g, cx - 12, cy - 12, 24, 24, 6); g.fill()
+  }
+
+  function draw() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 3)
+    var cv = document.createElement('canvas')
+    cv.width = W * dpr
+    cv.height = H * dpr
+    var g = cv.getContext('2d')
+    g.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+    var skin = SKIN[current]
+
+    // 底
+    g.fillStyle = '#FFFFFF'
+    g.fillRect(0, 0, W, H)
+
+    // 顶部渐变区
+    var grad = g.createLinearGradient(0, 0, W * 0.7, 300)
+    grad.addColorStop(0, skin[0])
+    grad.addColorStop(1, skin[1])
+    g.fillStyle = grad
+    g.fillRect(0, 0, W, 300)
+
+    // 光晕
+    g.fillStyle = 'rgba(255,255,255,0.12)'
+    disk(g, W - 30, 26, 92)
+    g.fillStyle = 'rgba(255,255,255,0.08)'
+    disk(g, 24, 292, 62)
+
+    // 主文案
+    var font = '-apple-system,"PingFang SC","Microsoft YaHei",sans-serif'
+    g.fillStyle = '#FFFFFF'
+    g.font = '700 27px ' + font
+    g.fillText(C.title, 24, 100)
+    g.font = '700 27px ' + font
+    g.fillText(C.subtitle, 24, 138)
+
+    g.globalAlpha = 0.9
+    g.font = '400 13px ' + font
+    g.fillText(C.desc, 24, 174)
+    g.globalAlpha = 1
+
+    // 标签
+    g.fillStyle = 'rgba(255,255,255,0.22)'
+    roundRect(g, 24, 196, 92, 26, 13); g.fill()
+    g.fillStyle = '#FFFFFF'
+    g.font = '600 12px ' + font
+    g.fillText('扫码免费领取', 37, 213)
+
+    // 分隔线
+    g.strokeStyle = '#EDEFF7'
+    g.lineWidth = 1
+    g.beginPath(); g.moveTo(24, 322); g.lineTo(W - 24, 322); g.stroke()
+
+    // 二维码
+    drawQR(g, 24, 340, 100)
+
+    // 二维码右侧文案
+    g.fillStyle = '#151833'
+    g.font = '600 15px ' + font
+    g.fillText('长按识别二维码', 140, 372)
+    g.fillStyle = '#949AB2'
+    g.font = '400 12px ' + font
+    g.fillText('领取 ' + C.subtitle, 140, 396)
+    g.fillText('邀请码 ' + C.inviteCode, 140, 416)
+    g.fillStyle = skin[0]
+    g.font = '600 12px ' + font
+    g.fillText(C.tip, 24, 462)
+
+    document.getElementById('poster-img').src = cv.toDataURL('image/png')
+  }
+
+  /* ---------- 模板列表 ---------- */
+  function renderTpls() {
+    document.getElementById('tpls').innerHTML = D.posterTemplates.map(function (t) {
+      return '<div class="tpl" data-key="' + t.key + '">' +
+        '<div class="tpl-cov cov-' + t.cover.split('-')[1] + (t.key === current ? ' tpl-on' : '') + '">' +
+        '<span class="badge badge-ghost" style="font-size:10px">' + t.name + '</span></div>' +
+        '<div class="tpl-t">' + t.name + '</div></div>'
+    }).join('')
+    document.querySelectorAll('#tpls .tpl').forEach(function (el) {
+      el.addEventListener('click', function () {
+        current = el.dataset.key
+        renderTpls()
+        draw()
+      })
+    })
+  }
+
+  /* ---------- 保存 / 转发 ---------- */
+  document.getElementById('btn-save').addEventListener('click', function () {
+    var src = document.getElementById('poster-img').src
+    if (APP.IS_WX) {
+      APP.toast('长按上方海报即可保存到相册')
+      return
+    }
+    var a = document.createElement('a')
+    a.href = src
+    a.download = '达人海报-' + SKIN[current][2] + '.png'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    APP.ok('海报已开始下载')
+  })
+
+  document.getElementById('btn-guide').addEventListener('click', function () {
+    APP.shareGuide('timeline')
+  })
+
+  renderTpls()
+  draw()
+})()
+</script>
+</body>
+</html>

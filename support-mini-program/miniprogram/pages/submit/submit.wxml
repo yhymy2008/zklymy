@@ -1,0 +1,83 @@
+<!-- 提交问题页面 -->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <view class="header-icon">📝</view>
+    <view class="header-text">
+      <text class="header-title">提交问题工单</text>
+      <text class="header-desc">请详细描述您遇到的问题</text>
+    </view>
+  </view>
+
+  <form bindsubmit="handleSubmit">
+    <!-- 问题分类 -->
+    <view class="card">
+      <text class="section-title">问题分类</text>
+      <view class="category-grid">
+        <view class="cat-item {{selectedCategory === item ? 'active' : ''}}" 
+              wx:for="{{categories}}" wx:key="name"
+              bindtap="selectCategory" data-cat="{{item}}">
+          <text class="cat-icon">{{item.icon}}</text>
+          <text class="cat-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 优先级 -->
+    <view class="card">
+      <text class="section-title">优先级</text>
+      <view class="priority-row">
+        <view class="pri-item {{selectedPriority === 'low' ? 'active-low' : ''}}" 
+              bindtap="selectPriority" data-pri="low">
+          <text class="pri-dot low"></text>
+          <text>低</text>
+        </view>
+        <view class="pri-item {{selectedPriority === 'normal' ? 'active-normal' : ''}}" 
+              bindtap="selectPriority" data-pri="normal">
+          <text class="pri-dot normal"></text>
+          <text>普通</text>
+        </view>
+        <view class="pri-item {{selectedPriority === 'high' ? 'active-high' : ''}}" 
+              bindtap="selectPriority" data-pri="high">
+          <text class="pri-dot high"></text>
+          <text>高</text>
+        </view>
+        <view class="pri-item {{selectedPriority === 'urgent' ? 'active-urgent' : ''}}" 
+              bindtap="selectPriority" data-pri="urgent">
+          <text class="pri-dot urgent"></text>
+          <text>紧急</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 问题标题 -->
+    <view class="card">
+      <text class="section-title">问题标题</text>
+      <input class="input-field" 
+             placeholder="请输入问题标题（如：系统登录失败）" 
+             value="{{title}}" 
+             bindinput="onTitleInput"
+             maxlength="50"/>
+      <text class="char-count">{{title.length}}/50</text>
+    </view>
+
+    <!-- 问题描述 -->
+    <view class="card">
+      <text class="section-title">详细描述</text>
+      <textarea class="textarea-field" 
+                placeholder="请详细描述您遇到的问题，包括：&#10;1. 操作步骤&#10;2. 预期结果&#10;3. 实际结果&#10;4. 相关截图或错误信息" 
+                value="{{description}}" 
+                bindinput="onDescInput"
+                maxlength="1000"
+                auto-height/>
+      <text class="char-count">{{description.length}}/1000</text>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-area">
+      <button class="btn-primary" form-type="submit" loading="{{submitting}}">
+        提交工单
+      </button>
+    </view>
+  </form>
+</view>

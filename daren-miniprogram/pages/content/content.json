@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "内容中心",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "backgroundColorTop": "#FFFFFF",
+  "backgroundColorBottom": "#F4F5FA",
+  "enablePullDownRefresh": false,
+  "usingComponents": {}
+}

@@ -1,0 +1,92 @@
+<!-- 管理面板 -->
+<view class="container">
+  <!-- 标题 -->
+  <view class="page-header">
+    <view class="header-icon">⚙️</view>
+    <view class="header-text">
+      <text class="header-title">管理面板</text>
+      <text class="header-desc">工单总览与处理</text>
+    </view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-grid">
+    <view class="stat-card-card" style="border-left:4rpx solid #f59e0b" bindtap="goManage" data-status="pending">
+      <text class="s-num">{{stats.pending}}</text>
+      <text class="s-label">待处理工单</text>
+    </view>
+    <view class="stat-card-card" style="border-left:4rpx solid #00d4ff" bindtap="goManage" data-status="processing">
+      <text class="s-num">{{stats.processing}}</text>
+      <text class="s-label">处理中</text>
+    </view>
+    <view class="stat-card-card" style="border-left:4rpx solid #10b981">
+      <text class="s-num">{{stats.resolved}}</text>
+      <text class="s-label">已解决</text>
+    </view>
+    <view class="stat-card-card" style="border-left:4rpx solid #5a6a7a">
+      <text class="s-num">{{stats.closed}}</text>
+      <text class="s-label">已关闭</text>
+    </view>
+  </view>
+
+  <!-- 待处理工单预览 -->
+  <view class="card">
+    <view class="card-title">
+      <text class="title-icon">📋</text>
+      <text>待处理工单</text>
+      <text class="view-all" bindtap="goManage" data-status="pending">查看全部 →</text>
+    </view>
+
+    <view wx:if="{{pendingTickets.length === 0}}" class="empty-reply">
+      <text style="color:#5a6a7a;font-size:24rpx">暂无待处理工单 🎉</text>
+    </view>
+
+    <view wx:else>
+      <view class="mini-ticket" wx:for="{{pendingTickets}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+        <view class="mini-top">
+          <text class="mini-no">{{item.ticket_no}}</text>
+          <text class="mini-cat">{{item.category}}</text>
+          <text wx:if="{{item.priority === 'urgent' || item.priority === 'high'}}" 
+                style="color:#ef4444;font-size:20rpx">⚡</text>
+        </view>
+        <text class="mini-title">{{item.title}}</text>
+        <text class="mini-time">{{item.created_at}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 处理中工单预览 -->
+  <view class="card">
+    <view class="card-title">
+      <text class="title-icon">🔄</text>
+      <text>处理中工单</text>
+    </view>
+
+    <view wx:if="{{processingTickets.length === 0}}" class="empty-reply">
+      <text style="color:#5a6a7a;font-size:24rpx">暂无处理中工单</text>
+    </view>
+
+    <view wx:else>
+      <view class="mini-ticket" wx:for="{{processingTickets}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+        <view class="mini-top">
+          <text class="mini-no">{{item.ticket_no}}</text>
+          <text class="mini-handler">🧑‍💻 {{item.handler_name}}</text>
+        </view>
+        <text class="mini-title">{{item.title}}</text>
+        <text class="mini-time">{{item.updated_at}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快速入口 -->
+  <view class="card">
+    <view class="card-title">
+      <text class="title-icon">⚡</text>
+      <text>快捷管理</text>
+    </view>
+    <view class="quick-btns">
+      <button class="btn-primary btn-sm" bindtap="goManage" data-status="pending">查看全部工单</button>
+      <button class="btn-secondary btn-sm" bindtap="goManage" data-status="pending">待处理列表</button>
+    </view>
+  </view>
+</view>

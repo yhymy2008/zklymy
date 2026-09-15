@@ -1,0 +1,78 @@
+<!-- 我的工单列表 -->
+<view class="container">
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-tab {{currentStatus === '' ? 'active' : ''}}" bindtap="switchStatus" data-status="">
+      <text>全部</text>
+    </view>
+    <view class="filter-tab {{currentStatus === 'pending' ? 'active' : ''}}" bindtap="switchStatus" data-status="pending">
+      <text>待处理</text>
+      <view class="tab-dot pending-dot"></view>
+    </view>
+    <view class="filter-tab {{currentStatus === 'processing' ? 'active' : ''}}" bindtap="switchStatus" data-status="processing">
+      <text>处理中</text>
+      <view class="tab-dot processing-dot"></view>
+    </view>
+    <view class="filter-tab {{currentStatus === 'resolved' ? 'active' : ''}}" bindtap="switchStatus" data-status="resolved">
+      <text>已解决</text>
+      <view class="tab-dot resolved-dot"></view>
+    </view>
+    <view class="filter-tab {{currentStatus === 'closed' ? 'active' : ''}}" bindtap="switchStatus" data-status="closed">
+      <text>已关闭</text>
+    </view>
+  </view>
+
+  <!-- 搜索 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索工单编号或标题..." value="{{keyword}}" bindinput="onSearch" confirm-type="search"/>
+    <text class="search-icon">🔍</text>
+  </view>
+
+  <!-- 工单列表 -->
+  <view wx:if="{{loading}}" class="loading-more">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:elif="{{tickets.length === 0}}" class="empty-state">
+    <text class="icon">📋</text>
+    <text class="text">{{currentStatus ? '暂无该状态的工单' : '暂无工单记录'}}</text>
+    <button class="btn-secondary btn-sm" style="margin-top:30rpx" bindtap="goSubmit">提交问题</button>
+  </view>
+
+  <view wx:else class="ticket-list">
+    <view class="card ticket-card {{item.priority === 'urgent' ? 'ticket-urgent' : item.priority === 'high' ? 'ticket-high' : ''}}"
+          wx:for="{{tickets}}" wx:key="id"
+          bindtap="goDetail" data-id="{{item.id}}">
+      <view class="ticket-header">
+        <view class="ticket-no-row">
+          <text class="ticket-no">#{{item.ticket_no}}</text>
+          <text class="tag tag-{{item.status}}">{{statusMap[item.status]}}</text>
+          <text wx:if="{{item.priority === 'urgent'}}" class="tag" style="background:rgba(239,68,68,0.15);color:#ef4444">紧急</text>
+          <text wx:elif="{{item.priority === 'high'}}" class="tag" style="background:rgba(245,158,11,0.15);color:#f59e0b">高优</text>
+        </view>
+        <text class="ticket-time">{{item.created_at}}</text>
+      </view>
+      
+      <text class="ticket-title">{{item.title}}</text>
+      <text class="ticket-desc">{{item.description.length > 80 ? item.description.substring(0, 80) + '...' : item.description}}</text>
+      
+      <view class="ticket-footer">
+        <view class="ticket-meta">
+          <text class="meta-category">🏷 {{item.category}}</text>
+          <text wx:if="{{item.handler_name}}" class="meta-handler">🧑‍💻 {{item.handler_name}}</text>
+        </view>
+        <view wx:if="{{item.rating > 0}}" class="rating-stars">
+          <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{item > item.rating ? 'empty' : ''}}">★</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view wx:if="{{hasMore && tickets.length > 0}}" class="loading-more" bindtap="loadMore">
+    <text>下拉加载更多</text>
+  </view>
+  <view wx:elif="{{tickets.length > 0}}" class="loading-more">
+    <text>-- 没有更多了 --</text>
+  </view>
+</view>

@@ -1,0 +1,150 @@
+/* 提交页面样式 */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 30rpx 0;
+}
+
+.header-icon {
+  font-size: 52rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid #1e3050;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #e0e8f0;
+}
+
+.header-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #5a6a7a;
+  margin-top: 6rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 26rpx;
+  color: #00d4ff;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 分类选择 */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+
+.cat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+  padding: 20rpx 10rpx;
+  background: rgba(0, 212, 255, 0.03);
+  border: 1px solid #1e3050;
+  border-radius: 12rpx;
+  transition: all 0.3s;
+}
+
+.cat-item.active {
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.1);
+  box-shadow: 0 0 16rpx rgba(0, 212, 255, 0.15);
+}
+
+.cat-icon {
+  font-size: 36rpx;
+}
+
+.cat-name {
+  font-size: 22rpx;
+  color: #8899aa;
+}
+
+.cat-item.active .cat-name {
+  color: #00d4ff;
+}
+
+/* 优先级 */
+.priority-row {
+  display: flex;
+  gap: 20rpx;
+}
+
+.pri-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 16rpx;
+  border: 1px solid #1e3050;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  color: #8899aa;
+  transition: all 0.3s;
+}
+
+.pri-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+}
+
+.pri-dot.low { background: #10b981; }
+.pri-dot.normal { background: #00d4ff; }
+.pri-dot.high { background: #f59e0b; }
+.pri-dot.urgent { background: #ef4444; }
+
+.pri-item.active-low { border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.08); }
+.pri-item.active-normal { border-color: #00d4ff; color: #00d4ff; background: rgba(0,212,255,0.08); }
+.pri-item.active-high { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.08); }
+.pri-item.active-urgent { border-color: #ef4444; color: #ef4444; background: rgba(239,68,68,0.08); }
+
+/* 文本域 */
+.textarea-field {
+  background: #1a2744;
+  border: 1px solid #1e3050;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #e0e8f0;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 200rpx;
+}
+
+.textarea-field:focus {
+  border-color: #00d4ff;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 22rpx;
+  color: #5a6a7a;
+  margin-top: 8rpx;
+}
+
+/* 提交区域 */
+.submit-area {
+  padding: 40rpx 0 60rpx;
+}
+
+.submit-area .btn-primary {
+  width: 100%;
+}

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="format-detection" content="telephone=no">
+<title>素材详情 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-bar">
+  <div id="nav"></div>
+
+  <div class="inset pad-t">
+    <div class="cov cov-lg cov-1">
+      <div style="padding:0 22px">
+        <span class="badge badge-ghost" id="a-type">图文</span>
+        <div class="white heavy mt8" id="a-title" style="font-size:20px;line-height:1.34"></div>
+      </div>
+      <span class="cov-bar">官方素材 · 可直接转发</span>
+    </div>
+  </div>
+
+  <!-- 指标 -->
+  <div class="inset mt16">
+    <div class="card pad">
+      <div class="row gap8" id="a-tags"></div>
+      <div class="row between mt12">
+        <div class="tc flex1">
+          <div class="md heavy num" id="a-views">-</div>
+          <div class="xs mut mt4">阅读</div>
+        </div>
+        <div class="tc flex1">
+          <div class="md heavy num" id="a-shares">-</div>
+          <div class="xs mut mt4">转发</div>
+        </div>
+        <div class="tc flex1">
+          <div class="md heavy num gold" id="a-orders">-</div>
+          <div class="xs mut mt4">带来成交</div>
+        </div>
+        <div class="tc flex1">
+          <div class="md heavy num green" id="a-rate">-</div>
+          <div class="xs mut mt4">转化率</div>
+        </div>
+      </div>
+      <div class="divider mt12"></div>
+      <div class="row between mt12">
+        <span class="xs mut" id="a-author"></span>
+        <span class="xs mut" id="a-updated"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 正文 -->
+  <div class="sect">
+    <span class="sect-t">素材正文</span>
+    <span class="sect-m" id="a-copy-body">复制全文</span>
+  </div>
+  <div class="card inset pad" id="a-body"></div>
+
+  <!-- 推荐文案 -->
+  <div class="sect">
+    <span class="sect-t">推荐转发文案</span>
+    <span class="sect-m" id="a-copy-draft">复制文案</span>
+  </div>
+  <div class="inset">
+    <div class="card pad">
+      <div class="md t1 lh18" id="a-draft"></div>
+      <div class="note note-v mt12">
+        <i class="ic ic-zap" style="width:16px;height:16px;margin-top:1px"></i>
+        <div class="xs t2 lh16 flex1">复制文案时会自动带上你的分销链接，客户点开即绑定，佣金不会漏算。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty" id="a-foot">— 素材由平台官方提供，可放心转发 —</div>
+</div>
+
+<!-- 底部操作条 -->
+<div class="fixed-bar">
+  <span class="btn btn-gray flex1" id="bar-poster"><i class="ic icg-image" style="width:15px;height:15px;margin-right:5px"></i>生成海报</span>
+  <span class="btn btn-primary flex1" id="bar-share"><i class="ic icw-share" style="width:15px;height:15px;margin-right:5px"></i>一键转发</span>
+</div>
+
+<!-- 转发抽屉 -->
+<div class="mask" id="mask-share"></div>
+<div class="sheet" id="sheet-share">
+  <div class="sheet-hd">
+    <span class="sheet-t">转发到</span>
+    <span class="sm mut" onclick="APP.closeSheet('share')">取消</span>
+  </div>
+  <div class="sheet-ch" id="share-ch"></div>
+  <div class="divider mt12"></div>
+  <div class="row between mt12">
+    <span class="md bold">转发寄语</span>
+    <span class="pill" id="draft-btn"><i class="ic ic-edit" style="width:12px;height:12px"></i>换一条</span>
+  </div>
+  <div class="sheet-input mt8" id="draft"></div>
+  <div class="row gap8 mt12">
+    <span class="btn btn-gray flex1" id="copy-btn">复制文案 + 链接</span>
+    <span class="btn btn-primary flex1" id="go-share">去微信转发</span>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+  var A = D.assetDetail
+  var draftList = D.drafts.slice()
+  draftList[0] = A.copywriting
+  var draftIndex = 0
+
+  APP.nav({ title: '素材详情', back: true, right: 'share' })
+
+  /* 填充详情 */
+  document.getElementById('a-type').textContent = A.type
+  document.getElementById('a-title').textContent = A.title
+  document.getElementById('a-tags').innerHTML = A.tags.map(function (t, i) {
+    return '<span class="tag' + (i === 0 ? ' tag-on' : '') + '">' + t + '</span>'
+  }).join('')
+  document.getElementById('a-views').textContent = A.views
+  document.getElementById('a-shares').textContent = A.shares
+  document.getElementById('a-orders').textContent = A.orders
+  document.getElementById('a-rate').textContent = A.rate
+  document.getElementById('a-author').textContent = A.author
+  document.getElementById('a-updated').textContent = A.updated
+  document.getElementById('a-draft').textContent = A.copywriting
+  document.getElementById('a-body').innerHTML = A.paragraphs.map(function (p) {
+    return '<p class="md t1 lh18" style="margin-bottom:14px">' + p + '</p>'
+  }).join('')
+
+  function draftText() { return draftList[draftIndex] }
+  function assetLink() { return APP.link('asset.html', { id: A.id }) }
+
+  /* 正文 / 文案复制 */
+  document.getElementById('a-copy-body').addEventListener('click', function () {
+    APP.copy(A.paragraphs.join('\n\n'), '全文已复制')
+  })
+  document.getElementById('a-copy-draft').addEventListener('click', function () {
+    APP.copy(draftText() + '\n' + assetLink(), '文案 + 链接已复制')
+  })
+
+  /* 转发抽屉 */
+  var CHANNELS = [
+    { key: 'wx', icon: 'msg', tone: 'green', label: '微信好友', mode: 'friend' },
+    { key: 'timeline', icon: 'image', tone: 'violet', label: '朋友圈', mode: 'timeline' },
+    { key: 'group', icon: 'users', tone: 'blue', label: '微信群', mode: 'friend' },
+    { key: 'link', icon: 'link', tone: 'gold', label: '复制链接', copy: true },
+    { key: 'poster', icon: 'image', tone: 'gold2', label: '生成海报', url: 'poster.html' },
+    { key: 'copy', icon: 'copy', tone: 'gray', label: '复制文案', copy: true }
+  ]
+
+  function openShare() {
+    document.getElementById('share-ch').innerHTML = CHANNELS.map(function (c) {
+      return '<div class="sheet-c" data-key="' + c.key + '">' +
+        '<div class="sheet-cico tone-' + c.tone + '"><i class="ic icw-' + c.icon + '" style="width:22px;height:22px"></i></div>' +
+        '<span class="sheet-ct">' + c.label + '</span></div>'
+    }).join('')
+    document.querySelectorAll('#share-ch .sheet-c').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var c = CHANNELS.filter(function (x) { return x.key === el.dataset.key })[0]
+        if (c.url) { APP.closeSheet('share'); return APP.go(c.url) }
+        if (c.copy) return APP.copy(draftText() + '\n' + assetLink(), '文案 + 链接已复制')
+        APP.closeSheet('share')
+        setTimeout(function () { APP.shareGuide(c.mode) }, 220)
+      })
+    })
+    APP.openSheet('share')
+  }
+
+  document.getElementById('bar-share').addEventListener('click', openShare)
+  document.getElementById('bar-poster').addEventListener('click', function () { APP.go('poster.html') })
+
+  document.getElementById('draft-btn').addEventListener('click', function () {
+    draftIndex = (draftIndex + 1) % draftList.length
+    document.getElementById('draft').textContent = draftText()
+  })
+  document.getElementById('copy-btn').addEventListener('click', function () {
+    APP.copy(draftText() + '\n' + assetLink(), '文案 + 链接已复制')
+  })
+  document.getElementById('go-share').addEventListener('click', function () {
+    APP.closeSheet('share')
+    setTimeout(function () { APP.shareGuide('friend') }, 220)
+  })
+
+  document.getElementById('draft').textContent = draftText()
+})()
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/submit/submit",
+    "pages/my-tickets/my-tickets",
+    "pages/ticket-detail/ticket-detail",
+    "pages/admin/dashboard/dashboard",
+    "pages/admin/ticket-manage/ticket-manage"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#0a1628",
+    "navigationBarTitleText": "系统问题工单",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0a1628"
+  },
+  "tabBar": {
+    "color": "#8899aa",
+    "selectedColor": "#00d4ff",
+    "backgroundColor": "#0d1f35",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-active.png"
+      },
+      {
+        "pagePath": "pages/submit/submit",
+        "text": "提交问题",
+        "iconPath": "images/add.png",
+        "selectedIconPath": "images/add-active.png"
+      },
+      {
+        "pagePath": "pages/my-tickets/my-tickets",
+        "text": "我的工单",
+        "iconPath": "images/list.png",
+        "selectedIconPath": "images/list-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6D5DFC">
+<meta name="format-detection" content="telephone=no">
+<title>我的团队 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-immersive">
+  <div id="nav"></div>
+
+  <div class="gh gh-brand">
+    <i class="gh-glow gh-glow-a"></i>
+    <i class="gh-glow gh-glow-b"></i>
+    <div style="position:relative">
+      <div class="sm" style="opacity:.8">团队累计分佣（元）</div>
+      <div class="row gap12" style="align-items:baseline">
+        <span class="num" style="font-size:34px;font-weight:700;line-height:1.18">8,572.00</span>
+        <span class="badge badge-ghost">本月 +¥1,240</span>
+      </div>
+    </div>
+    <div class="stats mt24" style="position:relative">
+      <div class="stat"><div class="stat-n num">28</div><div class="stat-l">团队成员</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num">8</div><div class="stat-l">直推达人</div></div>
+      <i class="vline"></i>
+      <div class="stat"><div class="stat-n num">20</div><div class="stat-l">间推达人</div></div>
+    </div>
+  </div>
+
+  <!-- 分佣规则 -->
+  <div class="card inset overlap pad">
+    <div class="row between">
+      <span class="md bold">团队分佣比例</span>
+      <span class="xs mut">永久有效 · 无层级上限（2 级）</span>
+    </div>
+    <div class="row gap12 mt16">
+      <div class="flex1 card-flat" style="background:#F6F4FF;padding:14px;border-radius:12px">
+        <div class="row between">
+          <span class="sm t2">直推分佣</span>
+          <span class="badge badge-violet">8 人</span>
+        </div>
+        <div class="num brand mt8" style="font-size:22px;font-weight:700">8%</div>
+        <div class="xs mut mt4">下级每笔成交分佣</div>
+      </div>
+      <div class="flex1 card-flat" style="background:#F4FBF7;padding:14px;border-radius:12px">
+        <div class="row between">
+          <span class="sm t2">间推分佣</span>
+          <span class="badge badge-green">20 人</span>
+        </div>
+        <div class="num green mt8" style="font-size:22px;font-weight:700">3%</div>
+        <div class="xs mut mt4">二级团队贡献</div>
+      </div>
+    </div>
+    <div class="note note-v mt16">
+      <i class="ic ic-users" style="width:16px;height:16px;margin-top:1px"></i>
+      <div class="xs t2 lh16 flex1">团队成员的下级也会为你贡献 3% 间推分佣，这是达人收入里最稳定的一块被动收益。</div>
+    </div>
+  </div>
+
+  <!-- 邀请 -->
+  <div class="inset mt16">
+    <div class="card pad row between">
+      <div class="row gap8">
+        <div class="ci tone-gold" style="margin-right:0"><i class="ic icw-gift" style="width:19px;height:19px"></i></div>
+        <div>
+          <div class="md bold">邀请达人入伙</div>
+          <div class="xs mut mt4">奖励 ¥50/人 + 永久团队分佣</div>
+        </div>
+      </div>
+      <span class="btn btn-primary btn-sm" id="invite">立即邀请</span>
+    </div>
+  </div>
+
+  <!-- 成员列表 -->
+  <div class="sect">
+    <span class="sect-t">团队成员</span>
+    <span class="sect-m" id="sort">按贡献排序 <i class="ic ic-down" style="width:9px;height:9px"></i></span>
+  </div>
+  <div class="card inset mb20" id="members"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+  var T = D.team
+
+  APP.nav({ title: '我的团队', theme: 'brand', back: true, right: 'share' })
+
+  function render() {
+    document.getElementById('members').innerHTML = T.list.map(function (m) {
+      return '<div class="cell line" data-id="' + m.id + '">' +
+        '<div class="av av-md av-' + m.avatar + '" style="margin-right:12px">' + m.initial + '</div>' +
+        '<div class="ct">' +
+        '<div class="row gap6"><span class="ct-t">' + m.name + '</span>' +
+        '<span class="badge badge-gray" style="font-size:10px">' + m.level + '</span>' +
+        '<span class="badge badge-' + (m.relation === '直推' ? 'violet' : 'green') + '" style="font-size:10px">' + m.relation + '</span>' +
+        '</div>' +
+        '<div class="ct-s">加入 ' + m.days + ' 天 · 累计贡献 ' + m.contribution + '</div>' +
+        '</div>' +
+        '<div class="cr"><i class="ic icg-cr" style="width:9px;height:9px"></i></div></div>'
+    }).join('')
+
+    document.querySelectorAll('#members .cell').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var m = T.list.filter(function (x) { return x.id === el.dataset.id })[0]
+        APP.toast(m.name + ' · 加入 ' + m.days + ' 天 · 贡献 ' + m.contribution)
+      })
+    })
+  }
+
+  document.getElementById('invite').addEventListener('click', function () {
+    APP.shareGuide('timeline')
+  })
+  document.getElementById('sort').addEventListener('click', function () {
+    T.list.reverse()
+    render()
+    APP.toast('已按贡献重新排序')
+  })
+
+  render()
+})()
+</script>
+</body>
+</html>

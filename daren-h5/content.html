@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="format-detection" content="telephone=no">
+<title>内容中心 · 达人中心</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app" class="page page-tab">
+  <div id="nav"></div>
+
+  <!-- 搜索 + 分类 -->
+  <div class="pad-h pad-t">
+    <div class="sbox" id="search-box">
+      <i class="ic icg-search" style="width:16px;height:16px"></i>
+      <span class="sbox-t">搜索素材 / 话术 / 活动</span>
+    </div>
+  </div>
+  <div class="chips mt16">
+    <div class="chips-in" id="chips"></div>
+  </div>
+
+  <!-- 官方主推 -->
+  <div class="inset mt16">
+    <div class="card" style="overflow:hidden" id="featured">
+      <div class="cov cov-lg cov-1">
+        <div style="padding:0 20px">
+          <span class="badge badge-ghost">官方主推</span>
+          <div class="white heavy mt8" style="font-size:19px;line-height:1.3">开学季 · 家长最关心的 5 个问题</div>
+        </div>
+        <span class="cov-bar">配套话术 + 海报已就绪 · 转发即得券</span>
+      </div>
+      <div class="pad row gap8">
+        <span class="btn btn-primary flex1" data-act="share"><i class="ic icw-share" style="width:15px;height:15px;margin-right:5px"></i>一键转发</span>
+        <span class="btn btn-rim flex1" data-act="poster">生成海报</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 素材列表 -->
+  <div class="sect">
+    <span class="sect-t">全部素材</span>
+    <span class="sect-m" id="sort-btn">按转化率排序 <i class="ic ic-down" style="width:9px;height:9px"></i></span>
+  </div>
+  <div class="card inset" id="list"></div>
+
+  <div class="inset mt16 mb20">
+    <div class="note">
+      <i class="ic ic-zap" style="width:18px;height:18px;margin-top:1px"></i>
+      <div class="flex1">
+        <div class="md bold">转发小技巧</div>
+        <div class="xs mut mt4 lh16">先发一条真实的个人感受，再带素材链接，家长更愿意点开。带链接的文案会自动带上你的归因参数，佣金不会漏算。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tab"></div>
+
+<!-- 转发抽屉 -->
+<div class="mask" id="mask-share"></div>
+<div class="sheet" id="sheet-share">
+  <div class="sheet-hd">
+    <span class="sheet-t">转发到</span>
+    <span class="sm mut" onclick="APP.closeSheet('share')">取消</span>
+  </div>
+  <div class="sheet-ch" id="share-ch"></div>
+
+  <div class="divider mt12"></div>
+  <div class="row between mt12">
+    <span class="md bold">转发寄语</span>
+    <span class="pill" id="draft-btn"><i class="ic ic-edit" style="width:12px;height:12px"></i>换一条</span>
+  </div>
+  <div class="sheet-input mt8" id="draft"></div>
+  <div class="row gap8 mt12">
+    <span class="btn btn-gray flex1" id="copy-btn">复制文案 + 链接</span>
+    <span class="btn btn-primary flex1" id="go-share">去微信转发</span>
+  </div>
+  <div class="xs mut tc mt8">H5 无法直接调起微信分享，点击后按提示操作即可</div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var D = APP.data
+  var category = '全部'
+  var draftIndex = 0
+  var currentAsset = D.assets[0]
+
+  APP.nav({ title: '内容中心' })
+  APP.tab('content')
+
+  /* 分类词条 */
+  function renderChips() {
+    document.getElementById('chips').innerHTML = D.categories.map(function (c) {
+      return '<span class="chip' + (c === category ? ' chip-on' : '') + '" data-c="' + c + '">' + c + '</span>'
+    }).join('')
+    document.querySelectorAll('#chips .chip').forEach(function (el) {
+      el.addEventListener('click', function () {
+        category = el.dataset.c
+        renderChips()
+        renderList()
+      })
+    })
+  }
+
+  /* 素材列表 */
+  function renderList() {
+    var list = category === '全部'
+      ? D.assets
+      : D.assets.filter(function (a) { return a.type === category || a.tags.indexOf(category) > -1 })
+
+    var host = document.getElementById('list')
+    if (!list.length) {
+      host.innerHTML = '<div class="empty"><div class="empty-ic"><i class="ic icg-grid" style="width:22px;height:22px"></i></div>该分类下暂无素材</div>'
+      return
+    }
+    host.innerHTML = list.map(function (a) {
+      return '<div class="asset line" data-id="' + a.id + '">' +
+        '<div class="cov cov-' + a.cover.split('-')[1] + '">' +
+        '<span class="cov-txt" style="font-size:11px">' + a.type + '</span>' +
+        '</div>' +
+        '<div class="flex1">' +
+        '<div class="md bold el2">' + a.title + '</div>' +
+        '<div class="xs mut mt4 el">' + a.desc + '</div>' +
+        '<div class="row gap6 mt8">' +
+        '<span class="tag tag-on">' + a.type + '</span>' +
+        a.tags.map(function (t) { return '<span class="tag">' + t + '</span>' }).join('') +
+        '</div>' +
+        '<div class="row gap12 mt8">' +
+        '<span class="metric"><i class="ic icg-eye" style="width:12px;height:12px"></i>' + a.views + '</span>' +
+        '<span class="metric"><i class="ic icg-share" style="width:12px;height:12px"></i>' + a.shares + '</span>' +
+        '<span class="metric gold bold">转化 ' + a.rate + '</span>' +
+        '</div>' +
+        '<div class="acts">' +
+        '<span class="act act-on" data-do="share" data-id="' + a.id + '"><i class="ic icw-share" style="width:13px;height:13px"></i>转发</span>' +
+        '<span class="act" data-do="copy" data-id="' + a.id + '"><i class="ic icg-copy" style="width:13px;height:13px"></i>复制文案</span>' +
+        '<span class="act" data-do="detail" data-id="' + a.id + '"><i class="ic icg-eye" style="width:13px;height:13px"></i>看详情</span>' +
+        '</div></div></div>'
+    }).join('')
+
+    host.querySelectorAll('[data-do]').forEach(function (el) {
+      el.addEventListener('click', function (ev) {
+        ev.stopPropagation()
+        var id = el.dataset.id
+        var asset = D.assets.filter(function (x) { return x.id === id })[0]
+        var act = el.dataset.do
+        if (act === 'detail') return APP.go('asset.html?id=' + id)
+        if (act === 'copy') return APP.copy(asset.title + '\n' + APP.link('asset.html', { id: id }), '文案 + 链接已复制')
+        openShare(asset)
+      })
+    })
+    host.querySelectorAll('[data-id]').forEach(function (el) {
+      el.addEventListener('click', function () { APP.go('asset.html?id=' + el.dataset.id) })
+    })
+  }
+
+  /* 转发抽屉 */
+  var CHANNELS = [
+    { key: 'wx', icon: 'msg', tone: 'green', label: '微信好友', mode: 'friend' },
+    { key: 'timeline', icon: 'image', tone: 'violet', label: '朋友圈', mode: 'timeline' },
+    { key: 'group', icon: 'users', tone: 'blue', label: '微信群', mode: 'friend' },
+    { key: 'link', icon: 'link', tone: 'gold', label: '复制链接', copy: true },
+    { key: 'poster', icon: 'image', tone: 'gold2', label: '生成海报', url: 'poster.html' },
+    { key: 'sms', icon: 'msg', tone: 'cyan', label: '短信面', mode: 'friend' },
+    { key: 'copy', icon: 'copy', tone: 'gray', label: '复制文案', copy: true },
+    { key: 'more', icon: 'zap', tone: 'red', label: '更多方式', mode: 'friend' }
+  ]
+
+  function openShare(asset) {
+    currentAsset = asset || currentAsset
+    document.getElementById('share-ch').innerHTML = CHANNELS.map(function (c) {
+      return '<div class="sheet-c" data-key="' + c.key + '">' +
+        '<div class="sheet-cico tone-' + c.tone + '"><i class="ic icw-' + c.icon + '" style="width:22px;height:22px"></i></div>' +
+        '<span class="sheet-ct">' + c.label + '</span></div>'
+    }).join('')
+
+    document.querySelectorAll('#share-ch .sheet-c').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var c = CHANNELS.filter(function (x) { return x.key === el.dataset.key })[0]
+        if (c.url) { APP.closeSheet('share'); return APP.go(c.url) }
+        if (c.copy) return APP.copy(draftText() + '\n' + APP.link('asset.html', { id: currentAsset.id }), '文案 + 链接已复制')
+        APP.closeSheet('share')
+        setTimeout(function () { APP.shareGuide(c.mode) }, 220)
+      })
+    })
+
+    var draft = D.drafts.slice()
+    draft[0] = currentAsset.title + '｜' + draft[0]
+    D._draft = draft
+    draftIndex = 0
+    renderDraft()
+    APP.openSheet('share')
+  }
+
+  function draftText() { return D._draft ? D._draft[draftIndex] : '' }
+  function renderDraft() { document.getElementById('draft').textContent = draftText() }
+
+  document.getElementById('draft-btn').addEventListener('click', function () {
+    draftIndex = (draftIndex + 1) % D._draft.length
+    renderDraft()
+  })
+  document.getElementById('copy-btn').addEventListener('click', function () {
+    APP.copy(draftText() + '\n' + APP.link('asset.html', { id: currentAsset.id }), '文案 + 链接已复制')
+  })
+  document.getElementById('go-share').addEventListener('click', function () {
+    APP.closeSheet('share')
+    setTimeout(function () { APP.shareGuide('friend') }, 220)
+  })
+
+  /* 主推卡 & 搜索 & 排序 */
+  document.getElementById('featured').addEventListener('click', function (e) {
+    var act = e.target.closest('[data-act]')
+    if (!act) return
+    if (act.dataset.act === 'poster') return APP.go('poster.html')
+    openShare(D.assets[0])
+  })
+  document.getElementById('search-box').addEventListener('click', function () {
+    APP.toast('搜索面板建设中，可先用下方分类筛选')
+  })
+  document.getElementById('sort-btn').addEventListener('click', function () {
+    D.assets.reverse()
+    renderList()
+    APP.toast('已按转化率重排')
+  })
+
+  renderChips()
+  renderList()
+})()
+</script>
+</body>
+</html>
